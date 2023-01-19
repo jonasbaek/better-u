@@ -1,8 +1,11 @@
+import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/Link";
 import toast from "react-hot-toast";
+import PostForm from "../components/forms/post";
 import NavBar from "../components/nav-bar";
+import useSWR from "swr";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 
@@ -15,10 +18,23 @@ export const getServerSideProps = ({ req, res }) => {
         destination: "/login",
       },
     };
-  } else return { props: { data: data } };
+  }
+  return { props: { data: data } };
 };
 
 export default function BetterUPage(props) {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const fetcher = async (url) =>
+    await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${props.data}`,
+      },
+    });
+
+  const users = useSWR(`${apiUrl}/user`, fetcher);
+  const currentUser = useSWR(`${apiUrl}/user/me`, fetcher);
+  const posts = useSWR(`${apiUrl}/posts`, fetcher);
+
   return (
     <>
       <Head>
@@ -29,9 +45,44 @@ export default function BetterUPage(props) {
       </Head>
 
       <main>
-        <header>
-          <NavBar />
-        </header>
+        <NavBar />
+        <div className="container">
+          <div className="row">
+            {/* componente do perfil na esquerda */}
+            <div className="col-3">
+              Current user
+              <h1>{currentUser.data?.data.username}</h1>
+            </div>
+
+            {/* componente central com barra de postagem e posts */}
+            <div className="col-6">
+              Posts
+              <h3>{currentUser.data?.data.username}</h3>
+              <PostForm data={props.data} posts={posts} />
+              <ul>
+                {posts?.data?.data?.posts?.map((post, i) => {
+                  return (
+                    <li key={i}>
+                      <span>{post.user.username}</span>
+                      <br></br>
+                      <span>{post.text}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* componente com lista de amigos na direita */}
+            <div className="col-3">
+              Users
+              <ul>
+                {users?.data?.data?.map((user, i) => {
+                  return <li key={i}>{user.name}</li>;
+                })}
+              </ul>
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );
