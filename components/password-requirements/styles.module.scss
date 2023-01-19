@@ -1,0 +1,33 @@
+.passwordRequirementsList {
+  list-style-type: none;
+  padding: 5px;
+  margin-top: 16px;
+
+  .passwordRequirementsItem {
+    display: flex;
+    align-items: center;
+
+    .checkmark {
+      position: absolute;
+      opacity: 0.8;
+      top: 0;
+      left: 0;
+    }
+
+    .checkbox {
+      position: relative;
+      border: 0.5px solid #1fb3ec;
+      border-radius: 50%;
+      margin-top: 2px;
+      height: 12px;
+      width: 12px;
+    }
+
+    .passwordRequirementsLabel {
+      margin: auto 0 0 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #7a8e8f;
+    }
+  }
+}

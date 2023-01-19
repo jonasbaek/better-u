@@ -1,0 +1,23 @@
+<svg
+id="Grupo_3"
+data-name="Grupo 3"
+xmlns="http://www.w3.org/2000/svg"
+width="12.001"
+height="12.001"
+viewBox="0 0 12.001 12.001"
+>
+    <path
+        id="Caminho_2"
+        data-name="Caminho 2"
+        d="M6,0A6,6,0,1,1,0,6,6,6,0,0,1,6,0Z"
+        transform="translate(0 0)"
+        fill="#1fb3ec"
+    />
+    <path
+        id="Caminho_1"
+        data-name="Caminho 1"
+        d="M95.816,20.729l-.022-.022a.908.908,0,0,0-1.28,0l-4.176,4.176-1.552-1.552a.908.908,0,0,0-1.28,0l-.022.022a.908.908,0,0,0,0,1.28L89.7,26.847a.908.908,0,0,0,1.28,0l4.838-4.838A.908.908,0,0,0,95.816,20.729Z"
+        transform="translate(-85.649 -17.777)"
+        fill="#fff"
+    />
+</svg>
