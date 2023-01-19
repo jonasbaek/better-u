@@ -1,12 +1,24 @@
 import Head from "next/head";
 import Image from "next/image";
-import SignUpForm from "./sign-up/form";
-import { Inter } from "@next/font/google";
-import styles from "../styles/Home.module.scss";
+import Link from "next/Link";
+import toast from "react-hot-toast";
+import NavBar from "../components/nav-bar";
+import { useRouter } from "next/router";
+import { getCookie, deleteCookie } from "cookies-next";
 
-const inter = Inter({ subsets: ["latin"] });
+export const getServerSideProps = ({ req, res }) => {
+  const data = getCookie("jwt", { req, res });
+  if (!data) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  } else return { props: { data: data } };
+};
 
-export default function Home() {
+export default function BetterUPage(props) {
   return (
     <>
       <Head>
@@ -15,20 +27,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main>
-        <div className="container">
-          <div className="row">
-            <div className="col-4">
-              <h1 className={styles.title}>Better-U</h1>
-              <p className={styles.paragraph}>
-                Where self-improvement meets social connection
-              </p>
-            </div>
-            <div className="col-8 d-flex justify-content-center">
-              <SignUpForm />
-            </div>
-          </div>
-        </div>
+        <header>
+          <NavBar />
+        </header>
       </main>
     </>
   );
