@@ -51,7 +51,7 @@ export default function SignUpForm() {
 
   const onSubmit = async (formData) => {
     try {
-      await axios.post("http://localhost:3000/user", formData);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`, formData);
       router.push("/");
       toast.success("Account created successfully!");
     } catch (err) {

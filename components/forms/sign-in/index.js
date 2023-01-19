@@ -20,7 +20,10 @@ export default function SignInForm() {
 
   const onSubmit = async (formData) => {
     try {
-      const { data } = await axios.post("http://localhost:3000/auth", formData);
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth`,
+        formData
+      );
       setCookie("jwt", data);
       router.push("/");
       toast.success("You are logged!");
