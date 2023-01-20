@@ -85,7 +85,14 @@ export default function BetterUPage(props) {
             <div className="col-6 mt-4">
               <PostStatus createPost={createPost} data={data} />
               {data.posts?.map((post, i) => {
-                return <Post key={i} post={post} removePost={removePost} />;
+                return (
+                  <Post
+                    key={i}
+                    post={post}
+                    currentUser={data.currentUser}
+                    removePost={removePost}
+                  />
+                );
               })}
             </div>
 
