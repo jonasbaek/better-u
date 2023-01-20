@@ -1,31 +1,39 @@
 import styles from "./styles.module.scss";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { deleteCookie } from "cookies-next";
+import AccountMenu from "../account-menu";
+import Link from "next/link";
+import {
+  Box,
+  IconButton,
+  InputBase,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import { Search } from "@mui/icons-material";
 
-export default function NavBar() {
-  const router = useRouter();
-
-  const logout = () => {
-    deleteCookie("jwt");
-    toast.success("You logged out");
-    router.push("/login");
-  };
+export default function NavBar(props) {
+  const currentUser = props.currentUser;
 
   return (
     <>
-      <div className="d-flex justify-content-between m-3">
-        <h1 className={styles.title}>Better-U</h1>
-
-        <input
-          className="ms-5 border-0 bg-light"
-          type="text"
-          placeholder="Search for friends"
-        />
-        <button className="btn btn-secondary" onClick={() => logout()}>
-          Logout
-        </button>
-      </div>
+      <nav className="navbar sticky-top navbar-light bg-light px-5 py-3">
+        <div className="d-flex">
+          <Link className="text-decoration-none navbar-brand" href="/">
+            <h1 className={styles.title}>Better-U</h1>
+          </Link>
+          <div className="ms-5 rounded border-0 bg-white p-1">
+            <InputBase className="ps-4" placeholder="Search for friends" />
+            <IconButton>
+              <Search />
+            </IconButton>
+          </div>
+        </div>
+        <AccountMenu currentUser={currentUser} />
+      </nav>
     </>
   );
 }
