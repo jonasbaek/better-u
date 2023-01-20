@@ -1,10 +1,13 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/Link";
+import toast from "react-hot-toast";
+import axios from "axios";
 import SignInForm from "../../components/forms/sign-in";
 import SignUpForm from "../../components/forms/sign-up";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import { getCookie, hasCookie } from "cookies-next";
+import { setCookie, hasCookie } from "cookies-next";
 import styles from "../../styles/styles.module.scss";
 
 export const getServerSideProps = ({ req, res }) => {
@@ -22,6 +25,34 @@ export const getServerSideProps = ({ req, res }) => {
 
 export default function Home() {
   const [toggleForm, setToggleForm] = useState(false);
+  const router = useRouter();
+
+  const createAccount = async (formData) => {
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`, formData);
+      setToggleForm(true);
+      toast.success("Account created successfully!");
+    } catch (err) {
+      if (err?.response?.data?.message.includes("duplicate")) {
+        return toast.error("This email has already been taken!");
+      }
+      toast.error(`${err?.response?.data?.message}`);
+    }
+  };
+
+  const signIn = async (formData) => {
+    try {
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth`,
+        formData
+      );
+      setCookie("jwt", data);
+      router.push("/");
+      toast.success("You are logged!");
+    } catch (err) {
+      toast.error(`${err?.response?.data?.message}`);
+    }
+  };
 
   return (
     <>
@@ -44,7 +75,7 @@ export default function Home() {
               <div>
                 {toggleForm ? (
                   <>
-                    <SignInForm />{" "}
+                    <SignInForm signIn={signIn} />
                     <Link
                       href=""
                       onClick={() => {
@@ -58,7 +89,7 @@ export default function Home() {
                   </>
                 ) : (
                   <>
-                    <SignUpForm />
+                    <SignUpForm createAccount={createAccount} />
                     <span className="d-block">
                       Have an account?{" "}
                       <Link

@@ -1,12 +1,8 @@
 import signInSchema from "./validation";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { setCookie } from "cookies-next";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-export default function SignInForm() {
+export default function SignInForm(props) {
   const {
     register,
     handleSubmit,
@@ -16,20 +12,8 @@ export default function SignInForm() {
     resolver: yupResolver(signInSchema),
   });
 
-  const router = useRouter();
-
   const onSubmit = async (formData) => {
-    try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth`,
-        formData
-      );
-      setCookie("jwt", data);
-      router.push("/");
-      toast.success("You are logged!");
-    } catch (err) {
-      toast.error(err.response.data.message);
-    }
+    await props.signIn(formData);
   };
 
   return (

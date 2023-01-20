@@ -1,13 +1,10 @@
 import signUpSchema from "./validation";
 import PasswordRequirements from "../../password-requirements";
-import toast from "react-hot-toast";
-import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-export default function SignUpForm() {
+export default function SignUpForm(props) {
   const {
     register,
     handleSubmit,
@@ -19,7 +16,6 @@ export default function SignUpForm() {
   });
 
   const [passwordIsDirty, setPasswordIsDirty] = useState(false);
-  const router = useRouter();
 
   const requirements = {
     min: passwordIsDirty
@@ -50,17 +46,7 @@ export default function SignUpForm() {
   };
 
   const onSubmit = async (formData) => {
-    try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`, formData);
-      router.push("/");
-      toast.success("Account created successfully!");
-    } catch (err) {
-      console.log(err);
-      if (err.response.data.message.includes("duplicate")) {
-        return toast.error("This email has already been taken!");
-      }
-      toast.error(err.response.data.message);
-    }
+    await props.createAccount(formData);
   };
 
   return (
