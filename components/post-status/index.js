@@ -24,11 +24,11 @@ export default function PostStatus(props) {
 
   return (
     <>
-      <div className={styles.postStatus}>
+      <section className={styles.postStatus}>
         <div className="container">
           <div className="row">
             <div className="col-2">
-              <Avatar className="mt-2" sx={{ width: 45, height: 45 }}>
+              <Avatar sx={{ width: 60, height: 60 }}>
                 {props.data.currentUser?.username}
               </Avatar>
             </div>
@@ -52,7 +52,7 @@ export default function PostStatus(props) {
           </div>
         </div>
         <span className={styles.line} />
-      </div>
+      </section>
     </>
   );
 }

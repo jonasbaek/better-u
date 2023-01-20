@@ -4,6 +4,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import NavBar from "../components/nav-bar";
 import useSWR from "swr";
+import PostProfile from "../components/post-profile";
 import PostStatus from "../components/post-status";
 import Post from "../components/post";
 import { useRouter } from "next/router";
@@ -77,8 +78,7 @@ export default function BetterUPage(props) {
           <div className="row">
             {/* componente do perfil na esquerda */}
             <div className="col-3">
-              Current user
-              <h1>{data.currentUser?.name}</h1>
+              <PostProfile currentUser={data.currentUser} />
             </div>
 
             {/* componente central com barra de postagem e posts */}

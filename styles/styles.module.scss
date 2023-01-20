@@ -38,10 +38,37 @@
     font-weight: 500;
   }
 
+  .postDate {
+    margin: 0px 20px;
+    font-weight: 500;
+    color: #595959;
+    font-size: 13px;
+  }
+
   .postText {
     margin-top: 45px;
     font-size: 15px;
     font-weight: 500;
     color: #595959;
+  }
+}
+
+.postProfileContainer {
+  background: #f8f9fa;
+  margin: 20px 0;
+  border-radius: 30px;
+  padding: 20px 43px;
+
+  .postProfileName {
+    margin: 0px 20px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .postProfileSubText {
+    margin: 0px 20px;
+    font-weight: 500;
+    color: #595959;
+    font-size: 13px;
   }
 }

@@ -26,12 +26,22 @@ export default function Post(props) {
     setAnchorEl(null);
   };
 
+  const postCreatedDate = new Date(props.post.createdAt);
+  const f = new Intl.DateTimeFormat("en-us", {
+    dateStyle: "full",
+  });
+
   return (
-    <div className={styles.postContainer}>
+    <section className={styles.postContainer}>
       <div className="d-flex justify-content-between">
         <div className="d-flex">
-          <Avatar>{props.post?.user?.name}</Avatar>
-          <span className={styles.postName}>{props.post?.user?.name}</span>
+          <Avatar sx={{ width: 50, height: 50 }}>
+            {props.post?.user?.name}
+          </Avatar>
+          <div className="d-flex flex-column mt-2">
+            <span className={styles.postName}>{props.post?.user?.name}</span>
+            <span className={styles.postDate}>{f.format(postCreatedDate)}</span>
+          </div>
         </div>
         <div className="d-flex">
           <IconButton>
@@ -102,6 +112,6 @@ export default function Post(props) {
         </div>
       </div>
       <p className={styles.postText}>{props.post?.text}</p>
-    </div>
+    </section>
   );
 }
