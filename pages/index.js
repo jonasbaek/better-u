@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import NavBar from "../components/nav-bar";
 import useSWR from "swr";
 import PostStatus from "../components/post-status";
+import Post from "../components/post";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
@@ -38,7 +39,7 @@ export default function BetterUPage(props) {
   const data = {
     currentUser: currentUserFetch?.data?.data,
     posts: postsFetch?.data?.data?.posts,
-    postsRevalidation: postsFetch.mutate(),
+    postsRevalidation: postsFetch.mutate,
     users: usersFetch?.data?.data,
   };
 
@@ -58,23 +59,15 @@ export default function BetterUPage(props) {
             {/* componente do perfil na esquerda */}
             <div className="col-3">
               Current user
-              <h1>{data.currentUser?.username}</h1>
+              <h1>{data.currentUser?.name}</h1>
             </div>
 
             {/* componente central com barra de postagem e posts */}
             <div className="col-6 mt-4">
               <PostStatus token={props.token} data={data} />
-              <ul>
-                {data.posts?.map((post, i) => {
-                  return (
-                    <li key={i}>
-                      <span>{post.user.username}</span>
-                      <br></br>
-                      <span>{post.text}</span>
-                    </li>
-                  );
-                })}
-              </ul>
+              {data.posts?.map((post, i) => {
+                return <Post key={i} post={post} />;
+              })}
             </div>
 
             {/* componente com lista de amigos na direita */}

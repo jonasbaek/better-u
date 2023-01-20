@@ -1,5 +1,4 @@
 import Avatar from "@mui/material/Avatar";
-
 import postSchema from "./validation";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -25,7 +24,7 @@ export default function PostStatus(props) {
           Authorization: `Bearer ${props.token}`,
         },
       });
-      props.data.postsRevalidation;
+      props.data.postsRevalidation();
       toast.success("Post created successfully");
     } catch (error) {
       toast.error(`${error}`);
