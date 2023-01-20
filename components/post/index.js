@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
 import axios from "axios";
+import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 
 export default function Post(props) {
@@ -87,7 +88,7 @@ export default function Post(props) {
               </ListItemIcon>
               Edit
             </MenuItem>
-            <MenuItem onClick={() => logout()}>
+            <MenuItem onClick={() => props.removePost(props.post.id)}>
               <ListItemIcon>
                 <DeleteIcon />
               </ListItemIcon>

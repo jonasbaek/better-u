@@ -1,34 +1,25 @@
 import Avatar from "@mui/material/Avatar";
 import postSchema from "./validation";
-import toast from "react-hot-toast";
-import axios from "axios";
 import styles from "../../styles/styles.module.scss";
 import { IconButton, InputBase } from "@mui/material";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRef } from "react";
 
 export default function PostStatus(props) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(postSchema),
   });
 
   const onSubmit = async (formData) => {
-    try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/posts`, formData, {
-        headers: {
-          Authorization: `Bearer ${props.token}`,
-        },
-      });
-      props.data.postsRevalidation();
-      toast.success("Post created successfully");
-    } catch (error) {
-      toast.error(`${error}`);
-    }
+    await props.createPost(formData);
+    setValue("text", "");
   };
 
   return (
@@ -46,6 +37,7 @@ export default function PostStatus(props) {
               onSubmit={handleSubmit(onSubmit)}
             >
               <InputBase
+                type="text"
                 className={styles.searchControl}
                 placeholder="What's on your mind..."
                 {...register("text")}

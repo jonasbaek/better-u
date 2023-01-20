@@ -25,12 +25,12 @@ export const getServerSideProps = ({ req, res }) => {
 
 export default function BetterUPage(props) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const fetcher = async (url) =>
-    await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${props.token}`,
-      },
-    });
+  const fetchOptions = {
+    headers: {
+      Authorization: `Bearer ${props.token}`,
+    },
+  };
+  const fetcher = async (url) => await axios.get(url, fetchOptions);
 
   const usersFetch = useSWR(`${apiUrl}/user`, fetcher);
   const currentUserFetch = useSWR(`${apiUrl}/user/me`, fetcher);
@@ -39,8 +39,27 @@ export default function BetterUPage(props) {
   const data = {
     currentUser: currentUserFetch?.data?.data,
     posts: postsFetch?.data?.data?.posts,
-    postsRevalidation: postsFetch.mutate,
     users: usersFetch?.data?.data,
+  };
+
+  const createPost = async (formData) => {
+    try {
+      await axios.post(`${apiUrl}/posts`, formData, fetchOptions);
+      postsFetch.mutate();
+      toast.success("Post created successfully");
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
+  const removePost = async (postId) => {
+    try {
+      await axios.delete(`${apiUrl}/posts/${postId}`, fetchOptions);
+      postsFetch.mutate();
+      toast.success("Post deleted successfully");
+    } catch (error) {
+      toast.error(`${error}`);
+    }
   };
 
   return (
@@ -64,9 +83,9 @@ export default function BetterUPage(props) {
 
             {/* componente central com barra de postagem e posts */}
             <div className="col-6 mt-4">
-              <PostStatus token={props.token} data={data} />
+              <PostStatus createPost={createPost} data={data} />
               {data.posts?.map((post, i) => {
-                return <Post key={i} post={post} />;
+                return <Post key={i} post={post} removePost={removePost} />;
               })}
             </div>
 
