@@ -5,7 +5,7 @@ import SignInForm from "../../components/forms/sign-in";
 import SignUpForm from "../../components/forms/sign-up";
 import { useState } from "react";
 import { getCookie, hasCookie } from "cookies-next";
-import styles from "../../styles/Login.module.scss";
+import styles from "../../styles/styles.module.scss";
 
 export const getServerSideProps = ({ req, res }) => {
   const isAuthenticated = hasCookie("jwt", { req, res });

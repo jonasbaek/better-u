@@ -2,22 +2,10 @@ import styles from "./styles.module.scss";
 import toast from "react-hot-toast";
 import AccountMenu from "../account-menu";
 import Link from "next/link";
-import {
-  Box,
-  IconButton,
-  InputBase,
-  Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { IconButton, InputBase } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
 export default function NavBar(props) {
-  const currentUser = props.currentUser;
-
   return (
     <>
       <nav className="navbar sticky-top navbar-light bg-light px-5 py-3">
@@ -27,12 +15,12 @@ export default function NavBar(props) {
           </Link>
           <div className="ms-5 rounded border-0 bg-white p-1">
             <InputBase className="ps-4" placeholder="Search for friends" />
-            <IconButton>
+            <IconButton className="me-4">
               <Search />
             </IconButton>
           </div>
         </div>
-        <AccountMenu currentUser={currentUser} />
+        <AccountMenu currentUser={props.data.currentUser} />
       </nav>
     </>
   );

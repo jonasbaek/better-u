@@ -7,7 +7,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import toast from "react-hot-toast";
@@ -45,7 +44,7 @@ export default function AccountMenu(props) {
             aria-expanded={open ? "true" : undefined}
           >
             <Avatar sx={{ width: 32, height: 32 }}>
-              {props.currentUser.username}
+              {props.currentUser?.username}
             </Avatar>
           </IconButton>
         </Tooltip>

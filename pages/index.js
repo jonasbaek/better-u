@@ -1,17 +1,17 @@
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/Link";
 import toast from "react-hot-toast";
-import PostForm from "../components/forms/post";
 import NavBar from "../components/nav-bar";
 import useSWR from "swr";
+import PostStatus from "../components/post-status";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
+import styles from "../styles/styles.module.scss";
 
 export const getServerSideProps = ({ req, res }) => {
-  const data = getCookie("jwt", { req, res });
-  if (!data) {
+  const token = getCookie("jwt", { req, res });
+  if (!token) {
     return {
       redirect: {
         permanent: false,
@@ -19,7 +19,7 @@ export const getServerSideProps = ({ req, res }) => {
       },
     };
   }
-  return { props: { data: data } };
+  return { props: { token: token } };
 };
 
 export default function BetterUPage(props) {
@@ -27,7 +27,7 @@ export default function BetterUPage(props) {
   const fetcher = async (url) =>
     await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${props.data}`,
+        Authorization: `Bearer ${props.token}`,
       },
     });
 
@@ -35,9 +35,12 @@ export default function BetterUPage(props) {
   const currentUserFetch = useSWR(`${apiUrl}/user/me`, fetcher);
   const postsFetch = useSWR(`${apiUrl}/posts`, fetcher);
 
-  const currentUser = currentUserFetch?.data?.data;
-  const posts = postsFetch?.data?.data?.posts;
-  const users = usersFetch?.data?.data;
+  const data = {
+    currentUser: currentUserFetch?.data?.data,
+    posts: postsFetch?.data?.data?.posts,
+    postsRevalidation: postsFetch.mutate(),
+    users: usersFetch?.data?.data,
+  };
 
   return (
     <>
@@ -49,22 +52,20 @@ export default function BetterUPage(props) {
       </Head>
 
       <main>
-        <NavBar currentUser={currentUser} />
+        <NavBar data={data} />
         <div className="container">
           <div className="row">
             {/* componente do perfil na esquerda */}
             <div className="col-3">
               Current user
-              <h1>{currentUser?.username}</h1>
+              <h1>{data.currentUser?.username}</h1>
             </div>
 
             {/* componente central com barra de postagem e posts */}
-            <div className="col-6">
-              Posts
-              <h3>{currentUser?.username}</h3>
-              <PostForm data={props.data} posts={posts} />
+            <div className="col-6 mt-4">
+              <PostStatus token={props.token} data={data} />
               <ul>
-                {posts?.map((post, i) => {
+                {data.posts?.map((post, i) => {
                   return (
                     <li key={i}>
                       <span>{post.user.username}</span>
@@ -80,7 +81,7 @@ export default function BetterUPage(props) {
             <div className="col-3">
               Users
               <ul>
-                {users?.map((user, i) => {
+                {data.users?.map((user, i) => {
                   return <li key={i}>{user.name}</li>;
                 })}
               </ul>
