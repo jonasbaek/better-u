@@ -11,6 +11,7 @@ import Post from "../components/post";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 export const getServerSideProps = ({ req, res }) => {
   const token = getCookie("jwt", { req, res });
@@ -64,6 +65,23 @@ export default function BetterUPage(props) {
     }
   };
 
+  const addOrRemoveFriend = async (friendId) => {
+    try {
+      const res = await axios.patch(
+        `${apiUrl}/user/add/${friendId}`,
+        {},
+        fetchOptions
+      );
+      if (res) {
+        currentUserFetch.mutate();
+        postsFetch.mutate();
+        toast.success(`${res.data.message}`);
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -92,6 +110,7 @@ export default function BetterUPage(props) {
                     post={post}
                     currentUser={data.currentUser}
                     removePost={removePost}
+                    addOrRemoveFriend={addOrRemoveFriend}
                   />
                 );
               })}
@@ -99,7 +118,10 @@ export default function BetterUPage(props) {
 
             {/* componente com lista de amigos na direita */}
             <div className="col-3">
-              <FriendList currentUser={data.currentUser} />
+              <FriendList
+                addOrRemoveFriend={addOrRemoveFriend}
+                currentUser={data.currentUser}
+              />
             </div>
           </div>
         </div>

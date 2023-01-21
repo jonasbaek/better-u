@@ -1,6 +1,7 @@
 import Avatar from "@mui/material/Avatar";
 import styles from "../../styles/styles.module.scss";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { IconButton, InputBase } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MenuItem from "@mui/material/MenuItem";
@@ -26,6 +27,17 @@ export default function Post(props) {
     setAnchorEl(null);
   };
 
+  const isCurrentUserPost = () => {
+    return props.currentUser._id === props.post?.user?.id;
+  };
+
+  const isFriendWithPostOwner = () => {
+    const friendListsFromPostOwner = props.post?.user?.friends;
+    return friendListsFromPostOwner.some(
+      (friend) => friend.user === props.currentUser._id
+    );
+  };
+
   const postCreatedDate = new Date(props.post.createdAt);
   const f = new Intl.DateTimeFormat("en-us", {
     dateStyle: "full",
@@ -44,10 +56,20 @@ export default function Post(props) {
           </div>
         </div>
         <div className="d-flex">
-          <IconButton>
-            <PersonAddIcon />
-          </IconButton>
-          {props.currentUser._id === props.post?.user?.id && (
+          {!isCurrentUserPost() && (
+            <IconButton
+              onClick={() => {
+                props.addOrRemoveFriend(props.post.user.id);
+              }}
+            >
+              {isFriendWithPostOwner() ? (
+                <PersonRemoveIcon />
+              ) : (
+                <PersonAddIcon />
+              )}
+            </IconButton>
+          )}
+          {isCurrentUserPost() && (
             <>
               <IconButton
                 onClick={handleClick}
