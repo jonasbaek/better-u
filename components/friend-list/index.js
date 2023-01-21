@@ -1,12 +1,16 @@
-import Avatar from "@mui/material/Avatar";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import { IconButton } from "@mui/material";
 import styles from "../../styles/styles.module.scss";
+import Avatar from "@mui/material/Avatar";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+import { IconButton } from "@mui/material";
 
-export default function PostProfile(props) {
+export default function FriendList(props) {
   return (
-    <section className={styles.postProfileContainer}>
-      <div className="d-flex justify-content-between">
+    <section className={styles.friendListContainer}>
+      <span className={styles.friendListTitle}>Friend List</span>
+      {/* {props.currentUser?.friends?.map((user, i) => {
+        return (
+          <div key={i}> */}
+      <div className="mt-3 d-flex justify-content-between">
         <div className="d-flex">
           <Avatar sx={{ width: 55, height: 55 }}>
             {props.currentUser?.name}
@@ -16,15 +20,17 @@ export default function PostProfile(props) {
               {props.currentUser?.name}
             </span>
             <span className={styles.postProfileSubText}>
-              {props.currentUser?.friends.length} friends
+              {props.currentUser?.username}
             </span>
           </div>
         </div>
         <IconButton>
-          <ManageAccountsIcon />
+          <PersonRemoveIcon />
         </IconButton>
       </div>
-      <span className={styles.divisor} />
+      {/* </div>
+        );
+      })} */}
     </section>
   );
 }

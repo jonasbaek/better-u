@@ -4,6 +4,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import NavBar from "../components/nav-bar";
 import useSWR from "swr";
+import FriendList from "../components/friend-list";
 import PostProfile from "../components/post-profile";
 import PostStatus from "../components/post-status";
 import Post from "../components/post";
@@ -74,7 +75,7 @@ export default function BetterUPage(props) {
 
       <main>
         <NavBar data={data} />
-        <div className="container">
+        <div className={`${styles.betterUContainer} container`}>
           <div className="row">
             {/* componente do perfil na esquerda */}
             <div className="col-3">
@@ -82,7 +83,7 @@ export default function BetterUPage(props) {
             </div>
 
             {/* componente central com barra de postagem e posts */}
-            <div className="col-6 mt-4">
+            <div className="col-6">
               <PostStatus createPost={createPost} data={data} />
               {data.posts?.map((post, i) => {
                 return (
@@ -98,12 +99,7 @@ export default function BetterUPage(props) {
 
             {/* componente com lista de amigos na direita */}
             <div className="col-3">
-              Users
-              <ul>
-                {data.users?.map((user, i) => {
-                  return <li key={i}>{user.name}</li>;
-                })}
-              </ul>
+              <FriendList currentUser={data.currentUser} />
             </div>
           </div>
         </div>

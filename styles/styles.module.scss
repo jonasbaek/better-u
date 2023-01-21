@@ -1,18 +1,36 @@
-.title {
-  font-family: "Pacifico", cursive;
-  font-size: 50px;
-  color: #2596be;
+@import "globals.scss";
+
+.betterUContainer {
+  max-width: 1600px;
 }
 
-.paragraph {
+.betterULogin {
+  font-family: "Pacifico", cursive;
+  font-size: 50px;
+  color: $logo-color;
+}
+
+.betterUNavBar {
+  font-family: "Pacifico", cursive;
+  margin: auto 0;
+  font-size: 30px;
+  color: $logo-color;
+}
+
+.navBarColor {
+  background: $blue;
+}
+
+.loginParagraph {
   font-family: "Maven Pro", sans-serif;
   font-size: 25px;
 }
 
 .postStatus {
-  padding: 30px 30px;
-  background: #f8f9fa;
-  border-radius: 30px;
+  margin: 20px 0;
+  padding: 30px 20px;
+  background: $blue;
+  border-radius: 10px;
 
   .searchForm {
     margin: auto;
@@ -28,10 +46,10 @@
 }
 
 .postContainer {
-  background: #f8f9fa;
+  background: $blue;
   margin: 20px 0;
-  border-radius: 30px;
-  padding: 20px 43px;
+  border-radius: 10px;
+  padding: 30px 36px;
 
   .postName {
     margin: auto 20px;
@@ -54,21 +72,44 @@
 }
 
 .postProfileContainer {
-  background: #f8f9fa;
+  background: $blue;
   margin: 20px 0;
-  border-radius: 30px;
-  padding: 20px 43px;
+  border-radius: 10px;
+  padding: 20px 30px;
 
   .postProfileName {
-    margin: 0px 20px;
     font-size: 18px;
     font-weight: 500;
   }
 
   .postProfileSubText {
-    margin: 0px 20px;
     font-weight: 500;
     color: #595959;
     font-size: 13px;
   }
+}
+
+.friendListContainer {
+  background: $blue;
+  margin: 20px 0;
+  border-radius: 10px;
+  padding: 20px 30px;
+
+  .friendListTitle {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .postProfileSubText {
+    font-weight: 500;
+    color: #595959;
+    font-size: 13px;
+  }
+}
+
+.divisor {
+  margin: 20px 0;
+  display: block;
+  width: 100%;
+  border-top: 5px solid white;
 }
