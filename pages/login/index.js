@@ -66,8 +66,8 @@ export default function Home() {
         <div className="container">
           <div className="row">
             <div className="col-4">
-              <h1 className={styles.title}>Better-U</h1>
-              <p className={styles.paragraph}>
+              <h1 className={styles.betterULogin}>Better-U</h1>
+              <p className={styles.loginParagraph}>
                 Where self-improvement meets social connection
               </p>
             </div>
