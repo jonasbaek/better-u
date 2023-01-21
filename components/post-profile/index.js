@@ -16,7 +16,7 @@ export default function PostProfile(props) {
               {props.currentUser?.name}
             </span>
             <span className={styles.postProfileSubText}>
-              {props.currentUser?.friends.length} friends
+              {props.currentUser?.friends?.length} friends
             </span>
           </div>
         </div>

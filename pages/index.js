@@ -9,9 +9,8 @@ import PostProfile from "../components/post-profile";
 import PostStatus from "../components/post-status";
 import Post from "../components/post";
 import { useRouter } from "next/router";
-import { getCookie, deleteCookie } from "cookies-next";
+import { getCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
-import { ConstructionOutlined } from "@mui/icons-material";
 
 export const getServerSideProps = ({ req, res }) => {
   const token = getCookie("jwt", { req, res });
@@ -92,7 +91,7 @@ export default function BetterUPage(props) {
       </Head>
 
       <main>
-        <NavBar data={data} />
+        <NavBar token={props.token} data={data} />
         <div className={`${styles.betterUContainer} container`}>
           <div className="row">
             {/* componente do perfil na esquerda */}

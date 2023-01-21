@@ -2,17 +2,13 @@ import Avatar from "@mui/material/Avatar";
 import styles from "../../styles/styles.module.scss";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import { IconButton, InputBase } from "@mui/material";
+import { IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
 import EditIcon from "@mui/icons-material/Edit";
-import toast from "react-hot-toast";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
-import axios from "axios";
-import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 
 export default function Post(props) {
