@@ -24,8 +24,8 @@ export default function FriendList(props) {
   };
 
   const handleClose = () => {
-    props.addOrRemoveFriend(friend.user._id);
     setSnackBar({ ...snackBar, open: false });
+    props.addOrRemoveFriend(friend.user._id);
   };
 
   return (

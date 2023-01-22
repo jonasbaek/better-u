@@ -1,6 +1,5 @@
 import Avatar from "@mui/material/Avatar";
 import styles from "../../styles/styles.module.scss";
-import CloseIcon from "@mui/icons-material/Close";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { IconButton } from "@mui/material";
@@ -10,12 +9,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
-import Snackbar from "@mui/material/Snackbar";
-import { Fragment, useState } from "react";
+import SnackBarComponent from "../snack-bar";
+import { useState } from "react";
 
 export default function Post(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const openSettings = Boolean(anchorEl);
+
+  const [snackBar, setSnackBar] = useState({
+    open: false,
+    vertical: "bottom",
+    horizontal: "right",
+  });
+  const { vertical, horizontal, open } = snackBar;
 
   const handleClickSettings = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,6 +29,16 @@ export default function Post(props) {
 
   const handleCloseSettings = () => {
     setAnchorEl(null);
+  };
+
+  const handleClick = () => {
+    setSnackBar({ ...snackBar, open: true });
+    props.addOrRemoveFriend(props.post.user.id);
+  };
+
+  const handleClose = () => {
+    setSnackBar({ ...snackBar, open: false });
+    props.addOrRemoveFriend(props.post.user.id);
   };
 
   const isCurrentUserPost = () => {
@@ -57,7 +73,7 @@ export default function Post(props) {
           {!isCurrentUserPost() && (
             <IconButton
               onClick={() => {
-                props.addOrRemoveFriend(props.post.user.id);
+                handleClick();
               }}
             >
               {isFriendWithPostOwner() ? (
@@ -130,6 +146,15 @@ export default function Post(props) {
             </>
           )}
         </div>
+        <SnackBarComponent
+          handleClose={handleClose}
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          onClose={() => {
+            setSnackBar({ ...snackBar, open: false });
+          }}
+          message="Unfriended!"
+        />
       </div>
       <p className={styles.postText}>{props.post?.text}</p>
     </section>
