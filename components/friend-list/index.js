@@ -1,9 +1,33 @@
+import { Fragment, useState } from "react";
+import Button from "@mui/material/Button";
+import CloseIcon from "@mui/icons-material/Close";
 import styles from "../../styles/styles.module.scss";
 import Avatar from "@mui/material/Avatar";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { IconButton } from "@mui/material";
+import SnackBarComponent from "../snack-bar";
 
 export default function FriendList(props) {
+  const [snackBar, setSnackBar] = useState({
+    open: false,
+    vertical: "bottom",
+    horizontal: "right",
+  });
+  const { vertical, horizontal, open } = snackBar;
+
+  const [friend, setFriend] = useState();
+
+  const handleClick = (friend) => {
+    setSnackBar({ ...snackBar, open: true });
+    setFriend(friend);
+    props.addOrRemoveFriend(friend.user._id);
+  };
+
+  const handleClose = () => {
+    props.addOrRemoveFriend(friend.user._id);
+    setSnackBar({ ...snackBar, open: false });
+  };
+
   return (
     <section className={styles.friendListContainer}>
       <span className={styles.friendListTitle}>Friend List</span>
@@ -26,7 +50,7 @@ export default function FriendList(props) {
               </div>
               <IconButton
                 onClick={() => {
-                  props.addOrRemoveFriend(friend.user._id);
+                  handleClick(friend);
                 }}
               >
                 <PersonRemoveIcon />
@@ -35,6 +59,15 @@ export default function FriendList(props) {
           </div>
         );
       })}
+      <SnackBarComponent
+        handleClose={handleClose}
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={() => {
+          setSnackBar({ ...snackBar, open: false });
+        }}
+        message="Unfriended!"
+      />
     </section>
   );
 }

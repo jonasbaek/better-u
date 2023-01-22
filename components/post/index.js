@@ -1,5 +1,6 @@
 import Avatar from "@mui/material/Avatar";
 import styles from "../../styles/styles.module.scss";
+import CloseIcon from "@mui/icons-material/Close";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { IconButton } from "@mui/material";
@@ -9,17 +10,18 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
-import { useState } from "react";
+import Snackbar from "@mui/material/Snackbar";
+import { Fragment, useState } from "react";
 
 export default function Post(props) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const openSettings = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleClickSettings = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleCloseSettings = () => {
     setAnchorEl(null);
   };
 
@@ -68,21 +70,21 @@ export default function Post(props) {
           {isCurrentUserPost() && (
             <>
               <IconButton
-                onClick={handleClick}
+                onClick={handleClickSettings}
                 size="small"
                 sx={{ ml: 2 }}
-                aria-controls={open ? "account-menu" : undefined}
+                aria-controls={openSettings ? "account-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
+                aria-expanded={openSettings ? "true" : undefined}
               >
                 <MoreVertIcon />
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
                 id="account-menu"
-                open={open}
-                onClose={handleClose}
-                onClick={handleClose}
+                open={openSettings}
+                onClose={handleCloseSettings}
+                onClick={handleCloseSettings}
                 PaperProps={{
                   elevation: 0,
                   sx: {
