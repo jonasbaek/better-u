@@ -9,8 +9,9 @@ import PostProfile from "../components/post-profile";
 import PostStatus from "../components/post-status";
 import Post from "../components/post";
 import { useRouter } from "next/router";
-import { getCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
+import { useEffect } from "react";
 
 export const getServerSideProps = ({ req, res }) => {
   const token = getCookie("jwt", { req, res });
@@ -26,6 +27,7 @@ export const getServerSideProps = ({ req, res }) => {
 };
 
 export default function BetterUPage(props) {
+  const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const fetchOptions = {
     headers: {
@@ -33,6 +35,13 @@ export default function BetterUPage(props) {
     },
   };
   const fetcher = async (url) => await axios.get(url, fetchOptions);
+  const validateToken = useSWR(`${apiUrl}/auth/validate`, fetcher);
+  useEffect(() => {
+    if (validateToken.error) {
+      deleteCookie("jwt");
+      router.push("/login");
+    }
+  }, [validateToken, router]);
 
   const usersFetch = useSWR(`${apiUrl}/user`, fetcher);
   const currentUserFetch = useSWR(`${apiUrl}/user/me`, fetcher);
