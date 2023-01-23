@@ -4,29 +4,47 @@ import CloseIcon from "@mui/icons-material/Close";
 import styles from "../../styles/styles.module.scss";
 import Avatar from "@mui/material/Avatar";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+import { Snackbar } from "@mui/material";
 import { IconButton } from "@mui/material";
-import SnackBarComponent from "../snack-bar";
 
 export default function FriendList(props) {
-  const [snackBar, setSnackBar] = useState({
+  const [snackBarState, setSnackBarState] = useState({
     open: false,
     vertical: "bottom",
     horizontal: "right",
   });
-  const { vertical, horizontal, open } = snackBar;
+  const { vertical, horizontal, open } = snackBarState;
 
   const [friend, setFriend] = useState();
 
   const handleClick = (friend) => {
-    setSnackBar({ ...snackBar, open: true });
+    setSnackBarState({ ...snackBarState, open: true });
     setFriend(friend);
     props.addOrRemoveFriend(friend.user._id);
   };
 
   const handleClose = () => {
-    setSnackBar({ ...snackBar, open: false });
+    setSnackBarState({ ...snackBarState, open: false });
     props.addOrRemoveFriend(friend.user._id);
   };
+
+  const action = (
+    <Fragment>
+      <Button color="primary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => {
+          setSnackBarState({ ...snackBarState, open: false });
+        }}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
 
   return (
     <section className={styles.friendListContainer}>
@@ -59,14 +77,15 @@ export default function FriendList(props) {
           </div>
         );
       })}
-      <SnackBarComponent
-        handleClose={handleClose}
+      <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
+        autoHideDuration={6000}
         onClose={() => {
-          setSnackBar({ ...snackBar, open: false });
+          setSnackBarState({ ...snackBarState, open: false });
         }}
         message="Unfriended!"
+        action={action}
       />
     </section>
   );

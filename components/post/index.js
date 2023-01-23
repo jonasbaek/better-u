@@ -1,4 +1,6 @@
 import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CloseIcon from "@mui/icons-material/Close";
 import styles from "../../styles/styles.module.scss";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
@@ -9,19 +11,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
-import SnackBarComponent from "../snack-bar";
-import { useState } from "react";
+import { Snackbar } from "@mui/material";
+import { useState, Fragment } from "react";
 
 export default function Post(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const openSettings = Boolean(anchorEl);
 
-  const [snackBar, setSnackBar] = useState({
+  const [snackBarState, setSnackBarState] = useState({
     open: false,
     vertical: "bottom",
     horizontal: "right",
   });
-  const { vertical, horizontal, open } = snackBar;
+  const { vertical, horizontal, open } = snackBarState;
 
   const handleClickSettings = (event) => {
     setAnchorEl(event.currentTarget);
@@ -32,12 +34,12 @@ export default function Post(props) {
   };
 
   const handleClick = () => {
-    setSnackBar({ ...snackBar, open: true });
+    setSnackBarState({ ...snackBarState, open: true });
     props.addOrRemoveFriend(props.post.user.id);
   };
 
   const handleClose = () => {
-    setSnackBar({ ...snackBar, open: false });
+    setSnackBarState({ ...snackBarState, open: false });
     props.addOrRemoveFriend(props.post.user.id);
   };
 
@@ -57,6 +59,24 @@ export default function Post(props) {
     dateStyle: "full",
   });
 
+  const action = (
+    <Fragment>
+      <Button color="primary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => {
+          setSnackBarState({ ...snackBarState, open: false });
+        }}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
+
   return (
     <section className={styles.postContainer}>
       <div className="d-flex justify-content-between">
@@ -71,11 +91,7 @@ export default function Post(props) {
         </div>
         <div className="d-flex">
           {!isCurrentUserPost() && (
-            <IconButton
-              onClick={() => {
-                handleClick();
-              }}
-            >
+            <IconButton onClick={handleClick}>
               {isFriendWithPostOwner() ? (
                 <PersonRemoveIcon />
               ) : (
@@ -146,14 +162,15 @@ export default function Post(props) {
             </>
           )}
         </div>
-        <SnackBarComponent
-          handleClose={handleClose}
+        <Snackbar
           anchorOrigin={{ vertical, horizontal }}
           open={open}
+          autoHideDuration={6000}
           onClose={() => {
-            setSnackBar({ ...snackBar, open: false });
+            setSnackBarState({ ...snackBarState, open: false });
           }}
           message="Unfriended!"
+          action={action}
         />
       </div>
       <p className={styles.postText}>{props.post?.text}</p>
