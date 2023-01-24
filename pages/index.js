@@ -11,7 +11,8 @@ import Post from "../components/post";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
-import { useEffect, useRef, useState } from "react";
+import useWindowSize from "../customHooks/useWindowSize";
+import { useEffect } from "react";
 
 export const getServerSideProps = ({ req, res }) => {
   const token = getCookie("jwt", { req, res });
@@ -27,20 +28,7 @@ export const getServerSideProps = ({ req, res }) => {
 };
 
 export default function BetterUPage(props) {
-  const [windowSize, setWindowSize] = useState([
-    window.innerWidth,
-    window.innerHeight,
-  ]);
-
-  useEffect(() => {
-    const handleWindowResize = () => {
-      setWindowSize([window.innerWidth, window.innerHeight]);
-    };
-    window.addEventListener("resize", handleWindowResize);
-    return () => {
-      window.removeEventListener("resize", handleWindowResize);
-    };
-  });
+  const windowSize = useWindowSize();
 
   const display = {
     xl: 1040,
@@ -112,6 +100,21 @@ export default function BetterUPage(props) {
     }
   };
 
+  const likePost = async (postId) => {
+    try {
+      const res = await axios.patch(
+        `${apiUrl}/posts/${postId}/like`,
+        {},
+        fetchOptions
+      );
+      if (res) {
+        postsFetch.mutate();
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -147,6 +150,7 @@ export default function BetterUPage(props) {
                   post={post}
                   currentUser={data.currentUser}
                   removePost={removePost}
+                  likePost={likePost}
                   addOrRemoveFriend={addOrRemoveFriend}
                 />
               );
