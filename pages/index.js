@@ -11,7 +11,7 @@ import Post from "../components/post";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const getServerSideProps = ({ req, res }) => {
   const token = getCookie("jwt", { req, res });
@@ -27,6 +27,28 @@ export const getServerSideProps = ({ req, res }) => {
 };
 
 export default function BetterUPage(props) {
+  const [windowSize, setWindowSize] = useState([
+    window.innerWidth,
+    window.innerHeight,
+  ]);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowSize([window.innerWidth, window.innerHeight]);
+    };
+    window.addEventListener("resize", handleWindowResize);
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  });
+
+  const display = {
+    xl: 1040,
+    lg: 960,
+    md: 720,
+    sm: 540,
+  };
+
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const fetchOptions = {
@@ -101,35 +123,43 @@ export default function BetterUPage(props) {
 
       <main>
         <NavBar token={props.token} data={data} />
-        <div className={`${styles.betterUContainer} container`}>
-          <div className="row">
-            {/* componente do perfil na esquerda */}
-            <div className="col-3">
-              <PostProfile currentUser={data.currentUser} />
-            </div>
-            {/* componente central com barra de postagem e posts */}
-            <div className="col-6">
-              <PostStatus createPost={createPost} data={data} />
-              {data.posts?.map((post, i) => {
-                return (
-                  <Post
-                    key={i}
-                    post={post}
-                    currentUser={data.currentUser}
-                    removePost={removePost}
-                    addOrRemoveFriend={addOrRemoveFriend}
-                  />
-                );
-              })}
-            </div>
-            {/* componente com lista de amigos na direita */}
-            <div className="col-3">
+        <div className="row mx-2">
+          <div
+            className={`p-2 ${windowSize[0] > display.lg ? "col-3" : "col-4"}`}
+          >
+            <PostProfile currentUser={data.currentUser} />
+            {windowSize[0] <= display.lg && windowSize[0] > display.md && (
+              <FriendList
+                addOrRemoveFriend={addOrRemoveFriend}
+                currentUser={data.currentUser}
+              />
+            )}
+          </div>
+
+          <div
+            className={`p-2 ${windowSize[0] > display.lg ? "col-6" : "col-8"}`}
+          >
+            <PostStatus createPost={createPost} data={data} />
+            {data.posts?.map((post, i) => {
+              return (
+                <Post
+                  key={i}
+                  post={post}
+                  currentUser={data.currentUser}
+                  removePost={removePost}
+                  addOrRemoveFriend={addOrRemoveFriend}
+                />
+              );
+            })}
+          </div>
+          {windowSize[0] > display.lg && (
+            <div className="col-3 p-2">
               <FriendList
                 addOrRemoveFriend={addOrRemoveFriend}
                 currentUser={data.currentUser}
               />
             </div>
-          </div>
+          )}
         </div>
       </main>
     </>

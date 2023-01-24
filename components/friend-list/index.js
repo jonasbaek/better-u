@@ -54,7 +54,7 @@ export default function FriendList(props) {
           <div key={i}>
             <div className="mt-3 d-flex justify-content-between">
               <div className="d-flex">
-                <Avatar sx={{ width: 55, height: 55 }}>
+                <Avatar sx={{ width: 40, height: 40 }}>
                   {friend?.user.name}
                 </Avatar>
                 <div className="d-flex flex-column mt-2 ms-3">

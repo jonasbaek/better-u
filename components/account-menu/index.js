@@ -43,7 +43,7 @@ export default function AccountMenu(props) {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>
+            <Avatar sx={{ width: 45, height: 45 }}>
               {props.currentUser?.username}
             </Avatar>
           </IconButton>

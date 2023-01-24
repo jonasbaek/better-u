@@ -81,7 +81,7 @@ export default function Post(props) {
     <section className={styles.postContainer}>
       <div className="d-flex justify-content-between">
         <div className="d-flex">
-          <Avatar sx={{ width: 50, height: 50 }}>
+          <Avatar sx={{ width: 45, height: 45 }}>
             {props.post?.user?.name}
           </Avatar>
           <div className="d-flex flex-column mt-2">

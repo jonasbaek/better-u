@@ -8,7 +8,7 @@ export default function PostProfile(props) {
     <section className={styles.postProfileContainer}>
       <div className="d-flex justify-content-between">
         <div className="d-flex">
-          <Avatar sx={{ width: 55, height: 55 }}>
+          <Avatar sx={{ width: 45, height: 45 }}>
             {props.currentUser?.name}
           </Avatar>
           <div className="d-flex flex-column mt-2 ms-3">

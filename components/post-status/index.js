@@ -28,7 +28,7 @@ export default function PostStatus(props) {
         <div className="container">
           <div className="row">
             <div className="col-2">
-              <Avatar sx={{ width: 60, height: 60 }}>
+              <Avatar sx={{ width: 55, height: 55 }}>
                 {props.data.currentUser?.username}
               </Avatar>
             </div>
