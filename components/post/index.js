@@ -11,6 +11,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { Snackbar } from "@mui/material";
 import { useState, Fragment } from "react";
 
@@ -52,6 +55,11 @@ export default function Post(props) {
     return friendListsFromPostOwner.some(
       (friend) => friend.user === props.currentUser._id
     );
+  };
+
+  const isPostLikedFromCurrentUser = () => {
+    const postLikesFromCurrentUser = props.currentUser.likes;
+    return postLikesFromCurrentUser.some((like) => like.post === props.post.id);
   };
 
   const postCreatedDate = new Date(props.post.createdAt);
@@ -174,6 +182,24 @@ export default function Post(props) {
         />
       </div>
       <p className={styles.postText}>{props.post?.text}</p>
+      <div className="d-flex mt-5">
+        <div>
+          <IconButton onClick={() => props.likePost(props.post.id)}>
+            {isPostLikedFromCurrentUser() ? (
+              <FavoriteIcon />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+          </IconButton>
+          {props.post?.likes?.length}
+        </div>
+        <div>
+          <IconButton sx={{ ml: 4 }}>
+            <ChatBubbleOutlineIcon />
+          </IconButton>
+          {props.post?.comments?.length}
+        </div>
+      </div>
     </section>
   );
 }

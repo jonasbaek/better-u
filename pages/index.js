@@ -108,6 +108,7 @@ export default function BetterUPage(props) {
         fetchOptions
       );
       if (res) {
+        currentUserFetch.mutate();
         postsFetch.mutate();
       }
     } catch (error) {
