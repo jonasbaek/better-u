@@ -107,7 +107,6 @@ export default function BetterUPage(props) {
             <div className="col-3">
               <PostProfile currentUser={data.currentUser} />
             </div>
-
             {/* componente central com barra de postagem e posts */}
             <div className="col-6">
               <PostStatus createPost={createPost} data={data} />
@@ -123,7 +122,6 @@ export default function BetterUPage(props) {
                 );
               })}
             </div>
-
             {/* componente com lista de amigos na direita */}
             <div className="col-3">
               <FriendList
