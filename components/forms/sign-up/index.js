@@ -12,6 +12,8 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 export default function SignUpForm(props) {
   const {
@@ -181,7 +183,18 @@ export default function SignUpForm(props) {
             <PasswordRequirements requirements={requirements} />
           )}
         </FormControl>
-
+        {props.isLoading && (
+          <Box
+            sx={{
+              display: "flex",
+              margin: "auto",
+              width: 40,
+              height: 40,
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
         <div className="mt-4 text-center">
           <button type="submit" className="w-100 btn btn-secondary">
             Create account

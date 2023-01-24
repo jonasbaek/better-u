@@ -8,12 +8,13 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 export default function SignInForm(props) {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(signInSchema),
@@ -62,6 +63,18 @@ export default function SignInForm(props) {
             {errors.password?.message}
           </FormHelperText>
         </FormControl>
+        {props.isLoading && (
+          <Box
+            sx={{
+              display: "flex",
+              margin: "auto",
+              width: 40,
+              height: 40,
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
         <button type="submit" className="btn btn-secondary mt-4">
           Login
         </button>

@@ -38,28 +38,30 @@ export default function Post(props) {
 
   const handleClick = () => {
     setSnackBarState({ ...snackBarState, open: true });
-    props.addOrRemoveFriend(props.post.user.id);
+    props.addOrRemoveFriend(props.post?.user?.id);
   };
 
   const handleClose = () => {
     setSnackBarState({ ...snackBarState, open: false });
-    props.addOrRemoveFriend(props.post.user.id);
+    props.addOrRemoveFriend(props.post?.user?.id);
   };
 
   const isCurrentUserPost = () => {
-    return props.currentUser._id === props.post?.user?.id;
+    return props.currentUser?._id === props.post?.user?.id;
   };
 
   const isFriendWithPostOwner = () => {
     const friendListsFromPostOwner = props.post?.user?.friends;
     return friendListsFromPostOwner.some(
-      (friend) => friend.user === props.currentUser._id
+      (friend) => friend.user === props.currentUser?._id
     );
   };
 
   const isPostLikedFromCurrentUser = () => {
-    const postLikesFromCurrentUser = props.currentUser.likes;
-    return postLikesFromCurrentUser.some((like) => like.post === props.post.id);
+    const postLikesFromCurrentUser = props.currentUser?.likes;
+    return postLikesFromCurrentUser.some(
+      (like) => like.post === props?.post?.id
+    );
   };
 
   const postCreatedDate = new Date(props.post.createdAt);

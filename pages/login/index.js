@@ -24,15 +24,21 @@ export const getServerSideProps = ({ req, res }) => {
 };
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
   const [toggleForm, setToggleForm] = useState(false);
   const router = useRouter();
 
   const createAccount = async (formData) => {
     try {
+      setIsLoading(true);
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`, formData);
-      setToggleForm(true);
-      toast.success("Account created successfully!");
+      setTimeout(() => {
+        setToggleForm(true);
+        toast.success("Account created successfully!");
+        setIsLoading(false);
+      }, 600);
     } catch (err) {
+      setIsLoading(false);
       if (err?.response?.data?.message.includes("duplicate")) {
         return toast.error("This email has already been taken!");
       }
@@ -42,15 +48,20 @@ export default function Home() {
 
   const signIn = async (formData) => {
     try {
+      setIsLoading(true);
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth`,
         formData
       );
       setCookie("jwt", data);
-      router.push("/");
-      toast.success("You are logged!");
+      setTimeout(() => {
+        router.push("/");
+        toast.success("You are logged!");
+        setIsLoading(false);
+      }, 600);
     } catch (err) {
       toast.error(`${err?.response?.data?.message}`);
+      setIsLoading(false);
     }
   };
 
@@ -74,7 +85,7 @@ export default function Home() {
             <div>
               {toggleForm ? (
                 <>
-                  <SignInForm signIn={signIn} />
+                  <SignInForm signIn={signIn} isLoading={isLoading} />
                   <span className="d-block mt-4 text-center">
                     New here?{" "}
                     <Link
@@ -91,7 +102,10 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  <SignUpForm createAccount={createAccount} />
+                  <SignUpForm
+                    createAccount={createAccount}
+                    isLoading={isLoading}
+                  />
                   <span className="d-block mt-4 text-center">
                     Have an account?{" "}
                     <Link
