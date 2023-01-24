@@ -1,6 +1,13 @@
 import signInSchema from "./validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 
 export default function SignInForm(props) {
   const {
@@ -18,36 +25,64 @@ export default function SignInForm(props) {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Email</label>
-          <input
+      <form className="d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
+        <FormControl error={errors.email} variant="standard">
+          <InputLabel htmlFor="input-with-icon-adornment">Email</InputLabel>
+          <Input
+            id="input-with-icon-adornment"
             type="email"
             {...register("email")}
+            onChange={(e) => {
+              setValue("email", e.target.value, {
+                shouldValidate: true,
+              });
+            }}
             onBlur={(e) => {
               setValue("email", e.target.value, {
                 shouldValidate: true,
               });
             }}
+            startAdornment={
+              <InputAdornment position="start">
+                <MailOutlineIcon />
+              </InputAdornment>
+            }
           />
-          <span className="form-text text-danger">{errors.email?.message}</span>
-        </div>
-        <div>
-          <label>Password</label>
-          <input
+          <FormHelperText id="component-error-text">
+            {errors.email?.message}
+          </FormHelperText>
+        </FormControl>
+        <FormControl
+          error={errors.password}
+          className="my-4"
+          variant="standard"
+        >
+          <InputLabel htmlFor="input-with-icon-adornment">Password</InputLabel>
+          <Input
+            id="input-with-icon-adornment"
             type="password"
             {...register("password")}
+            onChange={(e) => {
+              setValue("password", e.target.value, {
+                shouldValidate: true,
+              });
+            }}
             onBlur={(e) => {
               setValue("password", e.target.value, {
                 shouldValidate: true,
               });
             }}
+            startAdornment={
+              <InputAdornment position="start">
+                <LockOpenIcon />
+              </InputAdornment>
+            }
           />
-          <span className="form-text text-danger">
+          <FormHelperText id="component-error-text">
             {errors.password?.message}
-          </span>
-        </div>
-        <button type="submit" className="btn btn-secondary">
+          </FormHelperText>
+        </FormControl>
+        <button type="submit" className="btn btn-secondary mt-4">
           Login
         </button>
       </form>

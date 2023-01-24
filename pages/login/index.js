@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/Link";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import axios from "axios";
 import SignInForm from "../../components/forms/sign-in";
@@ -63,19 +63,20 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="container">
-          <div className="row">
-            <div className="col-4">
-              <h1 className={styles.betterULogin}>Better-U</h1>
-              <p className={styles.loginParagraph}>
-                Where self-improvement meets social connection
-              </p>
-            </div>
-            <div className="col-8 d-flex justify-content-center">
-              <div>
-                {toggleForm ? (
-                  <>
-                    <SignInForm signIn={signIn} />
+        <div className={`row ${styles.loginContainer}`}>
+          <div className={`col-12 col-lg-5 ${styles.loginLeftColumn}`}>
+            <h1 className={styles.betterULogo}>Better-U</h1>
+            <p className={styles.loginParagraph}>
+              Where self-improvement meets social connection
+            </p>
+          </div>
+          <div className={`col-12 col-lg-7 ${styles.loginRightColumn}`}>
+            <div>
+              {toggleForm ? (
+                <>
+                  <SignInForm signIn={signIn} />
+                  <span className="d-block mt-4 text-center">
+                    New here?{" "}
                     <Link
                       href=""
                       onClick={() => {
@@ -86,28 +87,31 @@ export default function Home() {
                     >
                       Create account
                     </Link>
-                  </>
-                ) : (
-                  <>
-                    <SignUpForm createAccount={createAccount} />
-                    <span className="d-block">
-                      Have an account?{" "}
-                      <Link
-                        href=""
-                        onClick={() => {
-                          setToggleForm(
-                            (toggleForm) => (toggleForm = !toggleForm)
-                          );
-                        }}
-                      >
-                        Sign-in
-                      </Link>
-                    </span>
-                  </>
-                )}
-              </div>
+                  </span>
+                </>
+              ) : (
+                <>
+                  <SignUpForm createAccount={createAccount} />
+                  <span className="d-block mt-4 text-center">
+                    Have an account?{" "}
+                    <Link
+                      href=""
+                      onClick={() => {
+                        setToggleForm(
+                          (toggleForm) => (toggleForm = !toggleForm)
+                        );
+                      }}
+                    >
+                      Sign-in
+                    </Link>
+                  </span>
+                </>
+              )}
             </div>
           </div>
+        </div>
+        <div className={styles.layerBackground}>
+          <span className={styles.firstLayer}></span>
         </div>
       </main>
     </>

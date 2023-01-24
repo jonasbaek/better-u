@@ -1,9 +1,45 @@
-@import "globals.scss";
+$logo-color: #2596be;
+$blue: #e6f2ff;
+$white: #ffffff;
 
-.betterULogin {
-  font-family: "Pacifico", cursive;
-  font-size: 50px;
-  color: $logo-color;
+.layerBackground {
+  position: absolute;
+  z-index: -100;
+
+  .firstLayer {
+    background: $blue;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 40vh;
+  }
+}
+
+.loginContainer {
+  max-width: 1700px;
+  height: 100vh;
+  margin: auto;
+  display: block;
+  .loginLeftColumn {
+    margin: 200px auto;
+
+    .loginParagraph {
+      font-size: 25px;
+      text-align: center;
+    }
+
+    .betterULogo {
+      font-family: "Pacifico", cursive;
+      font-size: 50px;
+      color: $logo-color;
+      text-align: center;
+    }
+  }
+
+  .loginRightColumn {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .betterUNavBar {
@@ -15,11 +51,6 @@
 
 .navBarColor {
   background: $blue;
-}
-
-.loginParagraph {
-  font-family: "Maven Pro", sans-serif;
-  font-size: 25px;
 }
 
 .postStatus {
@@ -118,4 +149,24 @@
   font-weight: 500;
   color: #595959;
   font-size: 12px;
+}
+
+@media (min-width: 992px) {
+  .layerBackground {
+    .firstLayer {
+      background: $blue;
+      position: fixed;
+      top: 0;
+      width: 50vw;
+      height: 100vh;
+    }
+  }
+
+  .loginContainer {
+    display: flex;
+
+    .loginRightColumn {
+      margin-top: 150px;
+    }
+  }
 }
