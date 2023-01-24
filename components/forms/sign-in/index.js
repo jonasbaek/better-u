@@ -32,16 +32,6 @@ export default function SignInForm(props) {
             id="input-with-icon-adornment"
             type="email"
             {...register("email")}
-            onChange={(e) => {
-              setValue("email", e.target.value, {
-                shouldValidate: true,
-              });
-            }}
-            onBlur={(e) => {
-              setValue("email", e.target.value, {
-                shouldValidate: true,
-              });
-            }}
             startAdornment={
               <InputAdornment position="start">
                 <MailOutlineIcon />
@@ -62,16 +52,6 @@ export default function SignInForm(props) {
             id="input-with-icon-adornment"
             type="password"
             {...register("password")}
-            onChange={(e) => {
-              setValue("password", e.target.value, {
-                shouldValidate: true,
-              });
-            }}
-            onBlur={(e) => {
-              setValue("password", e.target.value, {
-                shouldValidate: true,
-              });
-            }}
             startAdornment={
               <InputAdornment position="start">
                 <LockOpenIcon />
