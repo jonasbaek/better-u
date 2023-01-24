@@ -68,9 +68,9 @@ export default function SignUpForm(props) {
       >
         <h1>Create your account!</h1>
         <FormControl className="mt-5" error={errors.email} variant="standard">
-          <InputLabel htmlFor="input-with-icon-adornment">Email</InputLabel>
+          <InputLabel htmlFor="signUpEmail">Email</InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="signUpEmail"
             type="email"
             {...register("email")}
             onChange={(e) => {
@@ -94,9 +94,9 @@ export default function SignUpForm(props) {
           </FormHelperText>
         </FormControl>
         <FormControl className="mt-4" error={errors.name} variant="standard">
-          <InputLabel htmlFor="input-with-icon-adornment">Name</InputLabel>
+          <InputLabel htmlFor="signUpName">Name</InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="signUpName"
             {...register("name")}
             onChange={(e) => {
               setValue("name", e.target.value, {
@@ -123,9 +123,9 @@ export default function SignUpForm(props) {
           error={errors.username}
           variant="standard"
         >
-          <InputLabel htmlFor="input-with-icon-adornment">User Name</InputLabel>
+          <InputLabel htmlFor="signUpUsername">User Name</InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="signUpUsername"
             {...register("username")}
             onChange={(e) => {
               setValue("username", e.target.value, {
@@ -152,9 +152,9 @@ export default function SignUpForm(props) {
           className="my-4"
           variant="standard"
         >
-          <InputLabel htmlFor="input-with-icon-adornment">Password</InputLabel>
+          <InputLabel htmlFor="signUpPassword">Password</InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="signUpPassword"
             type="password"
             {...register("password")}
             onChange={(e) => {

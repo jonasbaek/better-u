@@ -28,9 +28,9 @@ export default function SignInForm(props) {
     <>
       <form className="d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
         <FormControl error={errors.email} variant="standard">
-          <InputLabel htmlFor="input-with-icon-adornment">Email</InputLabel>
+          <InputLabel htmlFor="signInEmail">Email</InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="signInEmail"
             type="email"
             {...register("email")}
             startAdornment={
@@ -48,9 +48,9 @@ export default function SignInForm(props) {
           className="my-4"
           variant="standard"
         >
-          <InputLabel htmlFor="input-with-icon-adornment">Password</InputLabel>
+          <InputLabel htmlFor="signInPassword">Password</InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="signInPassword"
             type="password"
             {...register("password")}
             startAdornment={
