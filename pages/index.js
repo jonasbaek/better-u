@@ -113,7 +113,13 @@ export default function BetterUPage(props) {
   const createPost = async (formData) => {
     try {
       await axios.post(`${apiUrl}/posts`, formData, fetchOptions);
-      postsFetch.mutate();
+      const { data } = await postsFetch.mutate();
+      setShowMorePosts({
+        nextUrl: data.nextUrl,
+        hasMore: !(data.posts.length === data.total),
+        posts: [...data.posts],
+        dirty: true,
+      });
       toast.success("Post created successfully");
     } catch (error) {
       toast.error(`${error}`);
@@ -123,7 +129,13 @@ export default function BetterUPage(props) {
   const removePost = async (postId) => {
     try {
       await axios.delete(`${apiUrl}/posts/${postId}`, fetchOptions);
-      postsFetch.mutate();
+      const { data } = await postsFetch.mutate();
+      setShowMorePosts({
+        nextUrl: data.nextUrl,
+        hasMore: !(data.posts.length === data.total),
+        posts: [...data.posts],
+        dirty: true,
+      });
       toast.success("Post deleted successfully");
     } catch (error) {
       toast.error(`${error}`);
