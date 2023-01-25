@@ -12,7 +12,9 @@ import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
 import useWindowSize from "../customHooks/useWindowSize";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ConstructionOutlined } from "@mui/icons-material";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const getServerSideProps = ({ req, res }) => {
   const token = getCookie("jwt", { req, res });
@@ -29,6 +31,13 @@ export const getServerSideProps = ({ req, res }) => {
 
 export default function BetterUPage(props) {
   const windowSize = useWindowSize();
+  const [showMorePosts, setShowMorePosts] = useState({
+    nextUrl: "",
+    posts: [],
+    hasMore: true,
+    dirty: false,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   const display = {
     xl: 1040,
@@ -44,8 +53,10 @@ export default function BetterUPage(props) {
       Authorization: `Bearer ${props.token}`,
     },
   };
-  const fetcher = async (url) => await axios.get(url, fetchOptions);
+  const fetcher = async (url, pagination = "") =>
+    await axios.get(`${url}${pagination ? pagination : ""}`, fetchOptions);
   const validateToken = useSWR(`${apiUrl}/auth/validate`, fetcher);
+
   useEffect(() => {
     if (validateToken.error) {
       deleteCookie("jwt");
@@ -55,12 +66,48 @@ export default function BetterUPage(props) {
 
   const usersFetch = useSWR(`${apiUrl}/user`, fetcher);
   const currentUserFetch = useSWR(`${apiUrl}/user/me`, fetcher);
-  const postsFetch = useSWR(`${apiUrl}/posts`, fetcher);
+  const postsFetch = useSWR(
+    [`${apiUrl}/posts`, showMorePosts.nextUrl],
+    ([url, pagination]) => fetcher(url, pagination)
+  );
+
+  useEffect(() => {
+    const waitForInitialDataFetch = () => {
+      setTimeout(() => {
+        if (
+          !usersFetch.isLoading &&
+          !currentUserFetch.isLoading &&
+          !postsFetch.isLoading
+        ) {
+          const { data } = postsFetch;
+          if (!showMorePosts.dirty) {
+            setShowMorePosts({
+              nextUrl: data.data.nextUrl,
+              posts: [...data.data.posts],
+              hasMore: !(data.data.posts.length === data.data.total),
+              dirty: true,
+            });
+            setIsLoading(false);
+          }
+        }
+      }, 300);
+    };
+    waitForInitialDataFetch();
+  }, [usersFetch.isLoading, currentUserFetch.isLoading, postsFetch.isLoading]);
 
   const data = {
     currentUser: currentUserFetch?.data?.data,
-    posts: postsFetch?.data?.data?.posts,
+    posts: postsFetch?.data?.data,
     users: usersFetch?.data?.data,
+  };
+
+  const fetchMorePosts = () => {
+    setShowMorePosts({
+      nextUrl: data.posts.nextUrl,
+      hasMore: !(data.posts.posts.length === data.posts.total),
+      posts: [...data.posts.posts],
+      dirty: true,
+    });
   };
 
   const createPost = async (formData) => {
@@ -126,46 +173,68 @@ export default function BetterUPage(props) {
       </Head>
 
       <main>
-        <NavBar token={props.token} data={data} />
-        <div className="row mx-2">
-          <div
-            className={`p-2 ${windowSize[0] > display.lg ? "col-3" : "col-4"}`}
-          >
-            <PostProfile currentUser={data.currentUser} />
-            {windowSize[0] <= display.lg && windowSize[0] > display.md && (
-              <FriendList
-                addOrRemoveFriend={addOrRemoveFriend}
-                currentUser={data.currentUser}
-              />
-            )}
-          </div>
+        {isLoading ? (
+          <p>Loading</p>
+        ) : (
+          <>
+            <NavBar token={props.token} data={data} />
+            <div className="row mx-2">
+              <div
+                className={`p-2 ${
+                  windowSize[0] > display.lg ? "col-3" : "col-4"
+                }`}
+              >
+                <PostProfile currentUser={data.currentUser} />
+                {windowSize[0] <= display.lg && windowSize[0] > display.md && (
+                  <FriendList
+                    addOrRemoveFriend={addOrRemoveFriend}
+                    currentUser={data.currentUser}
+                  />
+                )}
+              </div>
 
-          <div
-            className={`p-2 ${windowSize[0] > display.lg ? "col-6" : "col-8"}`}
-          >
-            <PostStatus createPost={createPost} data={data} />
-            {data.posts?.map((post, i) => {
-              return (
-                <Post
-                  key={i}
-                  post={post}
-                  currentUser={data.currentUser}
-                  removePost={removePost}
-                  likePost={likePost}
-                  addOrRemoveFriend={addOrRemoveFriend}
-                />
-              );
-            })}
-          </div>
-          {windowSize[0] > display.lg && (
-            <div className="col-3 p-2">
-              <FriendList
-                addOrRemoveFriend={addOrRemoveFriend}
-                currentUser={data.currentUser}
-              />
+              <div
+                className={`p-2 ${
+                  windowSize[0] > display.lg ? "col-6" : "col-8"
+                }`}
+              >
+                <PostStatus createPost={createPost} data={data} />
+                <InfiniteScroll
+                  dataLength={showMorePosts.posts.length}
+                  next={fetchMorePosts}
+                  hasMore={showMorePosts.hasMore}
+                  loader={<h4>Loading...</h4>}
+                  endMessage={
+                    <p style={{ textAlign: "center" }}>
+                      <b>Yay! You have seen it all</b>
+                    </p>
+                  }
+                >
+                  {showMorePosts.posts?.map((post, i) => {
+                    return (
+                      <Post
+                        key={i}
+                        post={post}
+                        currentUser={data.currentUser}
+                        removePost={removePost}
+                        likePost={likePost}
+                        addOrRemoveFriend={addOrRemoveFriend}
+                      />
+                    );
+                  })}
+                </InfiniteScroll>
+              </div>
+              {windowSize[0] > display.lg && (
+                <div className="col-3 p-2">
+                  <FriendList
+                    addOrRemoveFriend={addOrRemoveFriend}
+                    currentUser={data.currentUser}
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </main>
     </>
   );
