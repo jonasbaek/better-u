@@ -1,4 +1,4 @@
-import Avatar from "@mui/material/Avatar";
+import AvatarComponent from "../avatar";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { IconButton } from "@mui/material";
 import styles from "../../styles/styles.module.scss";
@@ -8,9 +8,7 @@ export default function PostProfile(props) {
     <section className={styles.postProfileContainer}>
       <div className="d-flex justify-content-between">
         <div className="d-flex">
-          <Avatar sx={{ width: 45, height: 45 }}>
-            {props.currentUser?.name}
-          </Avatar>
+          <AvatarComponent user={props.currentUser} />
           <div className="d-flex flex-column mt-2 ms-3">
             <span className={styles.postProfileName}>
               {props.currentUser?.name}

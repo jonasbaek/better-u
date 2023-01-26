@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "../../styles/styles.module.scss";
-import Avatar from "@mui/material/Avatar";
+import AvatarComponent from "../avatar";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { Snackbar } from "@mui/material";
 import { IconButton } from "@mui/material";
@@ -54,9 +54,7 @@ export default function FriendList(props) {
           <div key={i}>
             <div className="mt-3 d-flex justify-content-between">
               <div className="d-flex">
-                <Avatar sx={{ width: 40, height: 40 }}>
-                  {friend?.user.name}
-                </Avatar>
+                <AvatarComponent user={friend.user} width={40} height={40} />
                 <div className="d-flex flex-column mt-2 ms-3">
                   <span className={styles.postProfileName}>
                     {friend?.user.name}

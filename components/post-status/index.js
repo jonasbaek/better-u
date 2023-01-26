@@ -1,4 +1,4 @@
-import Avatar from "@mui/material/Avatar";
+import AvatarComponent from "../avatar";
 import postSchema from "./validation";
 import styles from "../../styles/styles.module.scss";
 import { IconButton, InputBase } from "@mui/material";
@@ -28,9 +28,11 @@ export default function PostStatus(props) {
         <div className="container">
           <div className="row">
             <div className="col-2">
-              <Avatar sx={{ width: 55, height: 55 }}>
-                {props.data.currentUser?.username}
-              </Avatar>
+              <AvatarComponent
+                user={props.data.currentUser}
+                width={55}
+                height={55}
+              />
             </div>
             <form
               className={`${styles.searchForm} col-10`}

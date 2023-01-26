@@ -1,4 +1,4 @@
-import Avatar from "@mui/material/Avatar";
+import AvatarComponent from "../avatar";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "../../styles/styles.module.scss";
@@ -91,9 +91,7 @@ export default function Post(props) {
     <section className={styles.postContainer}>
       <div className="d-flex justify-content-between">
         <div className="d-flex">
-          <Avatar sx={{ width: 45, height: 45 }}>
-            {props.post?.user?.name}
-          </Avatar>
+          <AvatarComponent user={props.post.user} />
           <div className="d-flex flex-column mt-2">
             <span className={styles.postName}>{props.post?.user?.name}</span>
             <span className={styles.postDate}>{f.format(postCreatedDate)}</span>
