@@ -39,8 +39,12 @@ export default function Home() {
       }, 600);
     } catch (err) {
       setIsLoading(false);
-      if (err?.response?.data?.message.includes("duplicate")) {
+      console.log(err);
+      if (err?.response?.data?.message.includes("email")) {
         return toast.error("This email has already been taken!");
+      }
+      if (err?.response?.data?.message.includes("username")) {
+        return toast.error("This username has already been taken!");
       }
       toast.error(`${err?.response?.data?.message}`);
     }
