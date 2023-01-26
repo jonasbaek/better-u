@@ -1,20 +1,21 @@
-import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import NavBar from "../components/nav-bar";
-import useSWR from "swr";
 import FriendList from "../components/friend-list";
 import PostProfile from "../components/post-profile";
 import PostStatus from "../components/post-status";
 import Post from "../components/post";
-import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
 import useWindowSize from "../customHooks/useWindowSize";
 import { useEffect, useState } from "react";
-import { ConstructionOutlined } from "@mui/icons-material";
+import useCurrentUser from "../customHooks/useCurrentUser";
+import usePosts from "../customHooks/usePosts";
+import useUsers from "../customHooks/useUsers";
+import useValidateToken from "../customHooks/useValidateToken";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { display } from "../util/display";
 
 export const getServerSideProps = ({ req, res }) => {
   const token = getCookie("jwt", { req, res });
@@ -30,46 +31,19 @@ export const getServerSideProps = ({ req, res }) => {
 };
 
 export default function BetterUPage(props) {
-  const windowSize = useWindowSize();
-  const [showMorePosts, setShowMorePosts] = useState({
-    nextUrl: "",
-    posts: [],
-    hasMore: true,
-    dirty: false,
-  });
   const [isLoading, setIsLoading] = useState(true);
-
-  const display = {
-    xl: 1040,
-    lg: 960,
-    md: 720,
-    sm: 540,
-  };
-
-  const router = useRouter();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const fetchOptions = {
-    headers: {
-      Authorization: `Bearer ${props.token}`,
-    },
-  };
-  const fetcher = async (url, pagination = "") =>
-    await axios.get(`${url}${pagination ? pagination : ""}`, fetchOptions);
-  const validateToken = useSWR(`${apiUrl}/auth/validate`, fetcher);
-
-  useEffect(() => {
-    if (validateToken.error) {
-      deleteCookie("jwt");
-      router.push("/login");
-    }
-  }, [validateToken, router]);
-
-  const usersFetch = useSWR(`${apiUrl}/user`, fetcher);
-  const currentUserFetch = useSWR(`${apiUrl}/user/me`, fetcher);
-  const postsFetch = useSWR(
-    [`${apiUrl}/posts`, showMorePosts.nextUrl],
-    ([url, pagination]) => fetcher(url, pagination)
-  );
+  const windowSize = useWindowSize();
+  useValidateToken();
+  const { usersFetch, addOrRemoveFriendService } = useUsers();
+  const currentUserFetch = useCurrentUser();
+  const {
+    showMorePosts,
+    setShowMorePosts,
+    postsFetch,
+    createPostService,
+    removePostService,
+    likePostService,
+  } = usePosts();
 
   useEffect(() => {
     const waitForInitialDataFetch = () => {
@@ -112,7 +86,7 @@ export default function BetterUPage(props) {
 
   const createPost = async (formData) => {
     try {
-      await axios.post(`${apiUrl}/posts`, formData, fetchOptions);
+      await createPostService(formData);
       const { data } = await postsFetch.mutate();
       setShowMorePosts({
         nextUrl: data.nextUrl,
@@ -128,7 +102,7 @@ export default function BetterUPage(props) {
 
   const removePost = async (postId) => {
     try {
-      await axios.delete(`${apiUrl}/posts/${postId}`, fetchOptions);
+      await removePostService(postId);
       const { data } = await postsFetch.mutate();
       setShowMorePosts({
         nextUrl: data.nextUrl,
@@ -144,11 +118,7 @@ export default function BetterUPage(props) {
 
   const addOrRemoveFriend = async (friendId) => {
     try {
-      const res = await axios.patch(
-        `${apiUrl}/user/add/${friendId}`,
-        {},
-        fetchOptions
-      );
+      const res = await addOrRemoveFriendService(friendId);
       if (res) {
         currentUserFetch.mutate();
         postsFetch.mutate();
@@ -161,14 +131,16 @@ export default function BetterUPage(props) {
 
   const likePost = async (postId) => {
     try {
-      const res = await axios.patch(
-        `${apiUrl}/posts/${postId}/like`,
-        {},
-        fetchOptions
-      );
+      const res = await likePostService(postId);
       if (res) {
         currentUserFetch.mutate();
-        postsFetch.mutate();
+        const { data } = await postsFetch.mutate();
+        setShowMorePosts({
+          nextUrl: data.nextUrl,
+          hasMore: !(data.posts.length === data.total),
+          posts: [...data.posts],
+          dirty: true,
+        });
       }
     } catch (error) {
       toast.error(`${error}`);
@@ -189,7 +161,7 @@ export default function BetterUPage(props) {
           <p>Loading</p>
         ) : (
           <>
-            <NavBar token={props.token} data={data} />
+            <NavBar token={props.token} currentUser={data.currentUser} />
             <div className="row mx-2">
               <div
                 className={`p-2 ${
