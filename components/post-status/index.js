@@ -5,7 +5,6 @@ import { IconButton, InputBase } from "@mui/material";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRef } from "react";
 
 export default function PostStatus(props) {
   const {
