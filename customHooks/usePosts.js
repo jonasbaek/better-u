@@ -47,7 +47,7 @@ export default function usePosts() {
       setTimeout(() => {
         if (!postsFetch.isLoading) {
           const { data } = postsFetch;
-          if (!showMorePosts.dirty) {
+          if (!showMorePosts.dirty && data) {
             setShowMorePosts({
               nextUrl: data.data.nextUrl,
               posts: [...data.data.posts],

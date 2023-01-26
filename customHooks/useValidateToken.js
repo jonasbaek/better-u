@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import axios from "axios";
-import { getCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 

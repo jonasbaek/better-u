@@ -53,16 +53,7 @@ export default function BetterUPage(props) {
           !currentUserFetch.isLoading &&
           !postsFetch.isLoading
         ) {
-          const { data } = postsFetch;
-          if (!showMorePosts.dirty) {
-            setShowMorePosts({
-              nextUrl: data.data.nextUrl,
-              posts: [...data.data.posts],
-              hasMore: !(data.data.posts.length === data.data.total),
-              dirty: true,
-            });
-            setIsLoading(false);
-          }
+          setIsLoading(false);
         }
       }, 300);
     };
@@ -77,7 +68,7 @@ export default function BetterUPage(props) {
 
   const fetchMorePosts = () => {
     setShowMorePosts({
-      nextUrl: data.posts.nextUrl,
+      nextUrl: data.posts?.nextUrl,
       hasMore: !(data.posts.posts.length === data.posts.total),
       posts: [...data.posts.posts],
       dirty: true,
