@@ -1,9 +1,8 @@
-import axios from "axios";
 import Avatar from "@mui/material/Avatar";
 import styles from "../../styles/styles.module.scss";
 import AccountMenu from "../account-menu";
 import Link from "next/link";
-import useSWRMutation from "swr/mutation";
+import useUsers from "../../customHooks/useUsers";
 import { IconButton, InputBase } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Search } from "@mui/icons-material";
@@ -12,26 +11,17 @@ import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/base/ClickAwayListener";
 
 export default function NavBar(props) {
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState();
   const [debounceResult, setDebounceResult] = useState(searchValue);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const fetchOptions = {
-    headers: {
-      Authorization: `Bearer ${props.token}`,
-    },
-  };
-
-  const fetcher = async (url, { arg }) =>
-    await axios.get(`${url}/${arg}`, fetchOptions);
-  const searchForByNameFetch = useSWRMutation(`${apiUrl}/user`, fetcher);
+  const { searchByNameFetch } = useUsers();
 
   useEffect(() => {
     setIsLoading(true);
     const timeoutId = setTimeout(async () => {
-      if (!!searchValue?.length) {
-        const { data } = await searchForByNameFetch.trigger(searchValue);
+      if (searchValue && searchValue.trim() !== "") {
+        const { data } = await searchByNameFetch.trigger(searchValue);
         setDebounceResult(data);
         setIsLoading(false);
       } else {
@@ -129,7 +119,7 @@ export default function NavBar(props) {
             </Box>
           )}
         </div>
-        <AccountMenu currentUser={props.data.currentUser} />
+        <AccountMenu currentUser={props.currentUser} />
       </nav>
     </ClickAwayListener>
   );
