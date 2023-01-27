@@ -31,7 +31,6 @@ export default function useUsers() {
       if (res) {
         currentUserFetch ? currentUserFetch.mutate() : null;
         refreshData ? refreshData() : null;
-        postsFetch.mutate();
         toast.success(`${res.data.message}`);
       }
     } catch (error) {
