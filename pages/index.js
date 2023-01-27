@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Image from "next/image";
-import toast from "react-hot-toast";
 import NavBar from "../components/nav-bar";
 import FriendList from "../components/friend-list";
 import PostProfile from "../components/post-profile";
@@ -31,18 +30,18 @@ export const getServerSideProps = ({ req, res }) => {
 };
 
 export default function BetterUPage(props) {
+  useValidateToken();
   const [isLoading, setIsLoading] = useState(true);
   const windowSize = useWindowSize();
-  useValidateToken();
   const { usersFetch, addOrRemoveFriendService } = useUsers();
   const currentUserFetch = useCurrentUser();
   const {
     showMorePosts,
-    setShowMorePosts,
     postsFetch,
     createPostService,
     removePostService,
     likePostService,
+    fetchMorePosts,
   } = usePosts();
 
   useEffect(() => {
@@ -55,7 +54,7 @@ export default function BetterUPage(props) {
         ) {
           setIsLoading(false);
         }
-      }, 300);
+      }, 150);
     };
     waitForInitialDataFetch();
   }, [usersFetch.isLoading, currentUserFetch.isLoading, postsFetch.isLoading]);
@@ -64,78 +63,6 @@ export default function BetterUPage(props) {
     currentUser: currentUserFetch?.data?.data,
     posts: postsFetch?.data?.data,
     users: usersFetch?.data?.data,
-  };
-
-  const fetchMorePosts = () => {
-    setShowMorePosts({
-      nextUrl: data.posts?.nextUrl,
-      hasMore: !(data.posts.posts.length === data.posts.total),
-      posts: [...data.posts.posts],
-      dirty: true,
-    });
-  };
-
-  const createPost = async (formData) => {
-    try {
-      await createPostService(formData);
-      const { data } = await postsFetch.mutate();
-      setShowMorePosts({
-        nextUrl: data.nextUrl,
-        hasMore: !(data.posts.length === data.total),
-        posts: [...data.posts],
-        dirty: true,
-      });
-      toast.success("Post created successfully");
-    } catch (error) {
-      toast.error(`${error}`);
-    }
-  };
-
-  const removePost = async (postId) => {
-    try {
-      await removePostService(postId);
-      const { data } = await postsFetch.mutate();
-      setShowMorePosts({
-        nextUrl: data.nextUrl,
-        hasMore: !(data.posts.length === data.total),
-        posts: [...data.posts],
-        dirty: true,
-      });
-      toast.success("Post deleted successfully");
-    } catch (error) {
-      toast.error(`${error}`);
-    }
-  };
-
-  const addOrRemoveFriend = async (friendId) => {
-    try {
-      const res = await addOrRemoveFriendService(friendId);
-      if (res) {
-        currentUserFetch.mutate();
-        postsFetch.mutate();
-        toast.success(`${res.data.message}`);
-      }
-    } catch (error) {
-      toast.error(`${error}`);
-    }
-  };
-
-  const likePost = async (postId) => {
-    try {
-      const res = await likePostService(postId);
-      if (res) {
-        currentUserFetch.mutate();
-        const { data } = await postsFetch.mutate();
-        setShowMorePosts({
-          nextUrl: data.nextUrl,
-          hasMore: !(data.posts.length === data.total),
-          posts: [...data.posts],
-          dirty: true,
-        });
-      }
-    } catch (error) {
-      toast.error(`${error}`);
-    }
   };
 
   return (
@@ -162,8 +89,9 @@ export default function BetterUPage(props) {
                 <PostProfile currentUser={data.currentUser} />
                 {windowSize[0] <= display.lg && windowSize[0] > display.md && (
                   <FriendList
-                    addOrRemoveFriend={addOrRemoveFriend}
                     currentUser={data.currentUser}
+                    addOrRemoveFriendService={addOrRemoveFriendService}
+                    currentUserFetch={currentUserFetch}
                   />
                 )}
               </div>
@@ -173,7 +101,7 @@ export default function BetterUPage(props) {
                   windowSize[0] > display.lg ? "col-6" : "col-8"
                 }`}
               >
-                <PostStatus createPost={createPost} data={data} />
+                <PostStatus data={data} createPostService={createPostService} />
                 <InfiniteScroll
                   dataLength={showMorePosts.posts.length}
                   next={fetchMorePosts}
@@ -191,9 +119,11 @@ export default function BetterUPage(props) {
                         key={i}
                         post={post}
                         currentUser={data.currentUser}
-                        removePost={removePost}
-                        likePost={likePost}
-                        addOrRemoveFriend={addOrRemoveFriend}
+                        currentUserFetch={currentUserFetch}
+                        removePostService={removePostService}
+                        likePostService={() =>
+                          likePostService(post.id, currentUserFetch)
+                        }
                       />
                     );
                   })}
@@ -202,8 +132,9 @@ export default function BetterUPage(props) {
               {windowSize[0] > display.lg && (
                 <div className="col-3 p-2">
                   <FriendList
-                    addOrRemoveFriend={addOrRemoveFriend}
                     currentUser={data.currentUser}
+                    addOrRemoveFriendService={addOrRemoveFriendService}
+                    currentUserFetch={currentUserFetch}
                   />
                 </div>
               )}

@@ -17,7 +17,7 @@ export default function PostStatus(props) {
   });
 
   const onSubmit = async (formData) => {
-    await props.createPost(formData);
+    await props.createPostService(formData);
     setValue("text", "");
   };
 

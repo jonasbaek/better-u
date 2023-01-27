@@ -32,14 +32,22 @@ export default function Profile(props) {
     );
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setSnackBarState({ ...snackBarState, open: true });
-    props.addOrRemoveFriend(props?.user?._id);
+    await props.addOrRemoveFriendService(
+      props?.user?._id,
+      null,
+      props.refreshData
+    );
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setSnackBarState({ ...snackBarState, open: false });
-    props.addOrRemoveFriend(props?.user?._id);
+    await props.addOrRemoveFriendService(
+      props?.user?._id,
+      null,
+      props.refreshData
+    );
   };
 
   const action = (

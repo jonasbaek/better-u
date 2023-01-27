@@ -2,6 +2,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function usePosts() {
   const [showMorePosts, setShowMorePosts] = useState({
@@ -26,22 +27,6 @@ export default function usePosts() {
     ([url, pagination]) => fetcher(url, pagination)
   );
 
-  const createPostService = async (formData) => {
-    return await axios.post(`${apiUrl}/posts`, formData, fetchOptions);
-  };
-
-  const removePostService = async (postId) => {
-    return await axios.delete(`${apiUrl}/posts/${postId}`, fetchOptions);
-  };
-
-  const likePostService = async (postId) => {
-    return await axios.patch(
-      `${apiUrl}/posts/${postId}/like`,
-      {},
-      fetchOptions
-    );
-  };
-
   useEffect(() => {
     const waitForInitialDataFetch = () => {
       setTimeout(() => {
@@ -61,6 +46,71 @@ export default function usePosts() {
     waitForInitialDataFetch();
   }, [postsFetch.isLoading]);
 
+  const createPostService = async (formData) => {
+    try {
+      await axios.post(`${apiUrl}/posts`, formData, fetchOptions);
+      const { data } = await postsFetch.mutate();
+      setShowMorePosts({
+        nextUrl: data.nextUrl,
+        hasMore: !(data.posts.length === data.total),
+        posts: [...data.posts],
+        dirty: true,
+      });
+      toast.success("Post created successfully");
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
+  const removePostService = async (postId) => {
+    try {
+      await axios.delete(`${apiUrl}/posts/${postId}`, fetchOptions);
+      const { data } = await postsFetch.mutate();
+      setShowMorePosts({
+        nextUrl: data.nextUrl,
+        hasMore: !(data.posts.length === data.total),
+        posts: [...data.posts],
+        dirty: true,
+      });
+      toast.success("Post deleted successfully");
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
+  const likePostService = async (postId, currentUserFetch) => {
+    try {
+      const res = await axios.patch(
+        `${apiUrl}/posts/${postId}/like`,
+        {},
+        fetchOptions
+      );
+      if (res) {
+        currentUserFetch.mutate();
+        const { data } = await postsFetch.mutate();
+        setShowMorePosts({
+          nextUrl: data.nextUrl,
+          hasMore: !(data.posts.length === data.total),
+          posts: [...data.posts],
+          dirty: true,
+        });
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
+  const fetchMorePosts = () => {
+    setShowMorePosts({
+      nextUrl: postsFetch?.data?.data.nextUrl,
+      hasMore: !(
+        postsFetch?.data.data.posts.length === postsFetch?.data?.data.total
+      ),
+      posts: [...postsFetch?.data?.data.posts],
+      dirty: true,
+    });
+  };
+
   return {
     showMorePosts,
     setShowMorePosts,
@@ -68,5 +118,6 @@ export default function usePosts() {
     createPostService,
     removePostService,
     likePostService,
+    fetchMorePosts,
   };
 }

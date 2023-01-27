@@ -17,15 +17,23 @@ export default function FriendList(props) {
 
   const [friend, setFriend] = useState();
 
-  const handleClick = (friend) => {
+  const handleClick = async (friend) => {
     setSnackBarState({ ...snackBarState, open: true });
     setFriend(friend);
-    props.addOrRemoveFriend(friend.user._id);
+    await props.addOrRemoveFriendService(
+      friend.user._id,
+      props.currentUserFetch,
+      null
+    );
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setSnackBarState({ ...snackBarState, open: false });
-    props.addOrRemoveFriend(friend.user._id);
+    await props.addOrRemoveFriendService(
+      friend.user._id,
+      props.currentUserFetch,
+      null
+    );
   };
 
   const action = (

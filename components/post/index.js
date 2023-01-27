@@ -104,7 +104,11 @@ export default function Post(props) {
                   </ListItemIcon>
                   Edit
                 </MenuItem>
-                <MenuItem onClick={() => props.removePost(props.post.id)}>
+                <MenuItem
+                  onClick={async () =>
+                    await props.removePostService(props.post.id)
+                  }
+                >
                   <ListItemIcon>
                     <DeleteIcon />
                   </ListItemIcon>
@@ -118,7 +122,7 @@ export default function Post(props) {
       <p className={styles.postText}>{props.post?.text}</p>
       <div className="d-flex mt-5">
         <div>
-          <IconButton onClick={() => props.likePost(props.post.id)}>
+          <IconButton onClick={async () => await props.likePostService()}>
             {isPostLikedFromCurrentUser() ? (
               <FavoriteIcon />
             ) : (

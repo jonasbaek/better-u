@@ -2,8 +2,9 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import toast from "react-hot-toast";
 
-export default function useCurrentUser() {
+export default function useUsers() {
   const token = getCookie("jwt");
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const fetchOptions = {
@@ -16,12 +17,26 @@ export default function useCurrentUser() {
   const searchFetcher = async (url, { arg }) =>
     await axios.get(`${url}/${arg}`, fetchOptions);
 
-  const addOrRemoveFriendService = async (friendId) => {
-    return await axios.patch(
-      `${apiUrl}/user/add/${friendId}`,
-      {},
-      fetchOptions
-    );
+  const addOrRemoveFriendService = async (
+    friendId,
+    currentUserFetch,
+    refreshData
+  ) => {
+    try {
+      const res = await axios.patch(
+        `${apiUrl}/user/add/${friendId}`,
+        {},
+        fetchOptions
+      );
+      if (res) {
+        currentUserFetch ? currentUserFetch.mutate() : null;
+        refreshData ? refreshData() : null;
+        postsFetch.mutate();
+        toast.success(`${res.data.message}`);
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
   };
 
   const searchByNameFetch = useSWRMutation(

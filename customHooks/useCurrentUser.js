@@ -2,7 +2,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 
-export default function useUsers() {
+export default function useCurrentUser() {
   const token = getCookie("jwt");
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const fetchOptions = {
