@@ -151,12 +151,16 @@ $white: #ffffff;
   font-size: 12px;
 }
 
-.profileContainer {
+.profilePageContainer {
   max-width: 1000px;
-  background: $blue;
-  margin: 8px auto;
-  border-radius: 10px;
-  padding: 20px 30px;
+  margin: auto;
+  padding: 0 20px;
+  .profileContainer {
+    background: $blue;
+    margin: 20px auto 5px;
+    border-radius: 10px;
+    padding: 20px 30px;
+  }
 }
 
 @media (min-width: 992px) {

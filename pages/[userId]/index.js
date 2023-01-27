@@ -1,11 +1,17 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import axios from "axios";
 import Head from "next/head";
+import Post from "../../components/post";
 import NavBar from "../../components/nav-bar";
 import Profile from "../../components/profile";
 import useUsers from "../../customHooks/useUsers";
-import toast from "react-hot-toast";
+import usePosts from "../../customHooks/usePosts";
+import useCurrentUser from "../../customHooks/useCurrentUser";
+import useValidateToken from "../../customHooks/useValidateToken";
+import InfiniteScroll from "react-infinite-scroll-component";
+import styles from "../../styles/styles.module.scss";
 
 export const getServerSideProps = async ({ req, res, params }) => {
   try {
@@ -49,23 +55,27 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 export default function UserPage(props) {
+  useValidateToken();
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
   };
 
+  const { showMorePosts, fetchMorePosts, removePostService } = usePosts();
   const { addOrRemoveFriendService } = useUsers();
-  const addOrRemoveFriend = async (friendId) => {
-    try {
-      const res = await addOrRemoveFriendService(friendId);
-      if (res) {
-        toast.success(`${res.data.message}`);
-        refreshData();
-      }
-    } catch (error) {
-      toast.error(`${error}`);
-    }
+  const currentUserFetch = useCurrentUser();
+  const currentUser = currentUserFetch?.data?.data;
+
+  const [postsFromUserProfile, setPostsFromUserProfile] = useState([]);
+
+  const filterPostsFromUser = () => {
+    const postsFromUser = showMorePosts.posts.filter(
+      (post) => post.user.id === currentUser._id
+    );
+    return postsFromUser;
   };
+
+  console.log(filterPostsFromUser());
 
   return (
     <>
@@ -77,8 +87,38 @@ export default function UserPage(props) {
       </Head>
       <main>
         <NavBar token={props.token} />
-        <div className="container">
-          <Profile user={props.user} addOrRemoveFriend={addOrRemoveFriend} />
+        <div className={styles.profilePageContainer}>
+          <Profile
+            user={props.user}
+            refreshData={refreshData}
+            addOrRemoveFriendService={addOrRemoveFriendService}
+          />
+          <InfiniteScroll
+            dataLength={showMorePosts.posts.length}
+            next={fetchMorePosts}
+            hasMore={showMorePosts.hasMore}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: "center" }}>
+                <b>...</b>
+              </p>
+            }
+          >
+            {showMorePosts.posts?.map((post, i) => {
+              return (
+                <Post
+                  key={i}
+                  post={post}
+                  currentUser={currentUser}
+                  currentUserFetch={currentUserFetch}
+                  removePostService={removePostService}
+                  likePostService={() =>
+                    likePostService(post.id, currentUserFetch)
+                  }
+                />
+              );
+            })}
+          </InfiniteScroll>
         </div>
       </main>
     </>
