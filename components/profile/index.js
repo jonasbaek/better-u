@@ -1,6 +1,7 @@
 import styles from "../../styles/styles.module.scss";
 import Avatar from "@mui/material/Avatar";
 import AvatarComponent from "../avatar";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { Snackbar } from "@mui/material";
 import { useState, Fragment } from "react";
 import Button from "@mui/material/Button";
@@ -97,13 +98,17 @@ export default function Profile(props) {
             })}
           </div>
         </div>
-        {!isCurrentUserProfile() && (
+        {!isCurrentUserProfile() ? (
           <IconButton className="mb-auto" onClick={handleClick}>
             {isFriendWithProfileUser() ? (
               <PersonRemoveIcon />
             ) : (
               <PersonAddIcon />
             )}
+          </IconButton>
+        ) : (
+          <IconButton className="mb-auto">
+            <ManageAccountsIcon />
           </IconButton>
         )}
       </div>
