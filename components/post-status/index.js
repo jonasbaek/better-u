@@ -5,6 +5,7 @@ import styles from "../../styles/styles.module.scss";
 import { IconButton, InputBase } from "@mui/material";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import ImageIcon from "@mui/icons-material/Image";
+import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState, useRef, useEffect } from "react";
@@ -40,7 +41,7 @@ export default function PostStatus(props) {
 
   useEffect(() => {
     if (!imageUpload) {
-      setPreviewImage(undefined);
+      setPreviewImage("");
       return;
     }
     const objectUrl = URL.createObjectURL(imageUpload);
@@ -83,6 +84,15 @@ export default function PostStatus(props) {
                     height={100}
                     layout="responsive"
                   />
+                  <IconButton
+                    className={styles.previewImageClose}
+                    onClick={() => {
+                      setImageUpload("");
+                      setPreviewImage("");
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
                 </div>
               )}
 
@@ -99,7 +109,7 @@ export default function PostStatus(props) {
                     className="d-none"
                     onChange={(e) => {
                       if (!e.target.files || e.target.files.length === 0) {
-                        setImageUpload(undefined);
+                        setImageUpload("");
                         return;
                       }
                       setImageUpload(e.target.files[0]);

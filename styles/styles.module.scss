@@ -81,8 +81,20 @@ $white: #ffffff;
 }
 
 .previewImage {
+  position: relative;
   object-fit: cover;
   border-radius: 40px;
+}
+
+.previewImageClose {
+  position: absolute !important;
+  top: 16px;
+  right: 10px;
+  z-index: 1;
+}
+
+.previewImageClose:hover {
+  color: $blue;
 }
 
 .postContainer {
