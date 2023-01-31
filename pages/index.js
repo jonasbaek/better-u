@@ -115,16 +115,18 @@ export default function BetterUPage(props) {
                 >
                   {showMorePosts.posts?.map((post, i) => {
                     return (
-                      <Post
-                        key={i}
-                        post={post}
-                        currentUser={data.currentUser}
-                        currentUserFetch={currentUserFetch}
-                        removePostService={removePostService}
-                        likePostService={() =>
-                          likePostService(post.id, currentUserFetch)
-                        }
-                      />
+                      <>
+                        <Post
+                          key={i}
+                          post={post}
+                          currentUser={data.currentUser}
+                          currentUserFetch={currentUserFetch}
+                          removePostService={removePostService}
+                          likePostService={() =>
+                            likePostService(post.id, currentUserFetch)
+                          }
+                        />
+                      </>
                     );
                   })}
                 </InfiniteScroll>

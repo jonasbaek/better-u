@@ -16,6 +16,7 @@ export default function usePosts() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const fetchOptions = {
     headers: {
+      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     },
   };

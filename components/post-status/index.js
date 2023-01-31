@@ -1,12 +1,19 @@
+import Image from "next/image";
 import AvatarComponent from "../avatar";
 import postSchema from "./validation";
 import styles from "../../styles/styles.module.scss";
 import { IconButton, InputBase } from "@mui/material";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import ImageIcon from "@mui/icons-material/Image";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useState, useRef, useEffect } from "react";
 
 export default function PostStatus(props) {
+  const [imageUpload, setImageUpload] = useState();
+  const [previewImage, setPreviewImage] = useState();
+  const fileInput = useRef(null);
+
   const {
     register,
     handleSubmit,
@@ -17,42 +24,99 @@ export default function PostStatus(props) {
   });
 
   const onSubmit = async (formData) => {
-    await props.createPostService(formData);
+    let form = new FormData();
+    form.append("text", formData.text);
+    if (imageUpload) {
+      form.append("image", imageUpload);
+    }
     setValue("text", "");
+    setImageUpload("");
+    await props.createPostService(form);
   };
+
+  const handleClick = () => {
+    fileInput.current.click();
+  };
+
+  useEffect(() => {
+    if (!imageUpload) {
+      setPreviewImage(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(imageUpload);
+    setPreviewImage(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [imageUpload]);
 
   return (
     <>
       <section className={styles.postStatus}>
         <div className="container">
-          <div className="row">
-            <div className="col-2">
+          <div className="d-flex">
+            <div className="me-4">
               <AvatarComponent
                 user={props.data.currentUser}
-                width={55}
-                height={55}
+                width={60}
+                height={60}
               />
             </div>
             <form
-              className={`${styles.searchForm} col-10`}
+              encType="multipart/form-data"
+              className={styles.postForm}
               onSubmit={handleSubmit(onSubmit)}
             >
               <InputBase
                 type="text"
-                className={styles.searchControl}
+                className={styles.postControl}
                 placeholder="What's on your mind..."
                 {...register("text")}
               />
-              <IconButton>
-                <EmojiEmotionsIcon />
-              </IconButton>
-              <button type="submit" hidden>
-                Post
-              </button>
+
+              {previewImage && (
+                <div className={styles.previewImageContainer}>
+                  <Image
+                    src={previewImage}
+                    alt="Post photo preview"
+                    className={styles.previewImage}
+                    width={100}
+                    height={100}
+                    layout="responsive"
+                  />
+                </div>
+              )}
+
+              <div className={styles.postIcons}>
+                <IconButton>
+                  <EmojiEmotionsIcon />
+                </IconButton>
+                <IconButton onClick={() => handleClick()}>
+                  <ImageIcon />
+                  <input
+                    type="file"
+                    accept=".png, .jpg, .jpeg"
+                    name="image"
+                    className="d-none"
+                    onChange={(e) => {
+                      if (!e.target.files || e.target.files.length === 0) {
+                        setImageUpload(undefined);
+                        return;
+                      }
+                      setImageUpload(e.target.files[0]);
+                      e.target.value = "";
+                    }}
+                    ref={(e) => {
+                      fileInput.current = e;
+                    }}
+                  />
+                </IconButton>
+                <button type="submit" className="ms-3 btn btn-secondary">
+                  Post
+                </button>
+              </div>
             </form>
           </div>
         </div>
-        <span className={styles.line} />
       </section>
     </>
   );

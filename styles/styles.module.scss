@@ -55,21 +55,34 @@ $white: #ffffff;
 
 .postStatus {
   margin: 8px 0;
-  padding: 30px 20px;
+  padding: 20px;
   background: $blue;
   border-radius: 10px;
 
-  .searchForm {
-    margin: auto;
-    padding: 10px;
-    border-radius: 50px;
-    background: white;
-
-    .searchControl {
-      padding: 0 35px;
-      width: 85%;
+  .postForm {
+    width: 100%;
+    .postControl {
+      padding: 15px 35px;
+      background: white;
+      width: 100%;
+      border-radius: 50px;
+    }
+    .previewImageContainer {
+      margin: 5px;
+      position: relative;
+      overflow: hidden;
     }
   }
+  .postIcons {
+    text-align: right;
+    padding: 10px 10px 0;
+    margin: auto 0;
+  }
+}
+
+.previewImage {
+  object-fit: cover;
+  border-radius: 40px;
 }
 
 .postContainer {

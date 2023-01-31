@@ -1,4 +1,5 @@
 import AvatarComponent from "../avatar";
+import Image from "next/image";
 import styles from "../../styles/styles.module.scss";
 import { IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -120,6 +121,16 @@ export default function Post(props) {
         </div>
       </div>
       <p className={styles.postText}>{props.post?.text}</p>
+      {props.post.image && (
+        <Image
+          src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/${props.post.image}`}
+          alt="Post image"
+          className={styles.previewImage}
+          width={100}
+          height={100}
+          layout="responsive"
+        />
+      )}
       <div className="d-flex mt-5">
         <div>
           <IconButton onClick={async () => await props.likePostService()}>
