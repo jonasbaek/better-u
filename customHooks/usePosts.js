@@ -105,7 +105,7 @@ export default function usePosts() {
     setShowMorePosts({
       nextUrl: postsFetch?.data?.data.nextUrl,
       hasMore: !(
-        postsFetch?.data.data.posts.length === postsFetch?.data?.data.total
+        postsFetch?.data?.data?.posts?.length === postsFetch?.data?.data?.total
       ),
       posts: [...postsFetch?.data?.data.posts],
       dirty: true,
