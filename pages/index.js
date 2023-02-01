@@ -33,7 +33,7 @@ export default function BetterUPage(props) {
   useValidateToken();
   const [isLoading, setIsLoading] = useState(true);
   const windowSize = useWindowSize();
-  const { usersFetch, addOrRemoveFriendService } = useUsers();
+  const { usersFetch, addOrRemoveFriendService, updateUser } = useUsers();
   const currentUserFetch = useCurrentUser();
   const {
     showMorePosts,
@@ -86,7 +86,12 @@ export default function BetterUPage(props) {
                   windowSize[0] > display.lg ? "col-3" : "col-4"
                 }`}
               >
-                <PostProfile currentUser={data.currentUser} />
+                <PostProfile
+                  currentUser={data.currentUser}
+                  currentUserFetch={currentUserFetch}
+                  postsFetch={postsFetch}
+                  updateUser={updateUser}
+                />
                 {windowSize[0] <= display.lg && windowSize[0] > display.md && (
                   <FriendList
                     currentUser={data.currentUser}
@@ -115,18 +120,16 @@ export default function BetterUPage(props) {
                 >
                   {showMorePosts.posts?.map((post, i) => {
                     return (
-                      <>
-                        <Post
-                          key={i}
-                          post={post}
-                          currentUser={data.currentUser}
-                          currentUserFetch={currentUserFetch}
-                          removePostService={removePostService}
-                          likePostService={() =>
-                            likePostService(post.id, currentUserFetch)
-                          }
-                        />
-                      </>
+                      <Post
+                        key={i}
+                        post={post}
+                        currentUser={data.currentUser}
+                        currentUserFetch={currentUserFetch}
+                        removePostService={removePostService}
+                        likePostService={() =>
+                          likePostService(post.id, currentUserFetch)
+                        }
+                      />
                     );
                   })}
                 </InfiniteScroll>

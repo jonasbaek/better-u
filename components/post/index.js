@@ -123,7 +123,7 @@ export default function Post(props) {
       <p className={styles.postText}>{props.post?.text}</p>
       {props.post.image && (
         <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/${props.post.image}`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/posts/${props.post.image}`}
           alt="Post image"
           className={styles.previewImage}
           width={100}

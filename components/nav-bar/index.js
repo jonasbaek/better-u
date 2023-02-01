@@ -104,9 +104,7 @@ export default function NavBar(props) {
                         <span className={styles.searchResultName}>
                           {user.name}
                         </span>
-                        <span className={styles.searchResultSubText}>
-                          {user.username}
-                        </span>
+                        <span className={styles.searchResultSubText}></span>
                       </div>
                     </div>
                   );

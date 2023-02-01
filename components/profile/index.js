@@ -1,7 +1,7 @@
 import styles from "../../styles/styles.module.scss";
 import Avatar from "@mui/material/Avatar";
 import AvatarComponent from "../avatar";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import EditModal from "../edit-modal";
 import { Snackbar } from "@mui/material";
 import { useState, Fragment } from "react";
 import Button from "@mui/material/Button";
@@ -9,7 +9,7 @@ import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import useCurrentUser from "../../customHooks/useCurrentUser";
+import Image from "next/image";
 
 export default function Profile(props) {
   const [snackBarState, setSnackBarState] = useState({
@@ -18,18 +18,16 @@ export default function Profile(props) {
     horizontal: "right",
   });
   const { vertical, horizontal, open } = snackBarState;
-  const currentUserFetch = useCurrentUser();
-  const currentUser = currentUserFetch?.data?.data;
 
   const isCurrentUserProfile = () => {
-    return currentUser?._id === props?.user?._id;
+    return props.currentUser?._id === props?.user?._id;
   };
 
   const isFriendWithProfileUser = () => {
     const friendListsFromProfileOwner = props.user?.friends;
 
     return friendListsFromProfileOwner.some(
-      (friend) => friend.user._id === currentUser?._id
+      (friend) => friend.user._id === props.currentUser?._id
     );
   };
 
@@ -79,10 +77,15 @@ export default function Profile(props) {
               height: 150,
             }}
           >
-            {props.user.username}
+            <Image
+              src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.user?.avatar}`}
+              className="text-center"
+              alt="Profile photo"
+              fill
+            />
           </Avatar>
           <div className="ms-4 fw-bold lh-1">
-            <h1 className="mt-2">{props.user.username}</h1>
+            <h1 className="mt-2">{props.user.name}</h1>
             <p className="ms-1 text-secondary">
               {props.user?.friends.length} Friends
             </p>
@@ -107,9 +110,13 @@ export default function Profile(props) {
             )}
           </IconButton>
         ) : (
-          <IconButton className="mb-auto">
-            <ManageAccountsIcon />
-          </IconButton>
+          <EditModal
+            currentUser={props.currentUser}
+            currentUserFetch={props.currentUserFetch}
+            postsFetch={props.postsFetch}
+            updateUser={props.updateUser}
+            refreshData={props.refreshData}
+          />
         )}
       </div>
       <Snackbar

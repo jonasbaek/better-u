@@ -5,7 +5,6 @@ const signUpSchema = Yup.object({
     .email("Please enter a valid email")
     .required("Email is required"),
   name: Yup.string().trim().required("Full name is required"),
-  username: Yup.string().trim().required("Full name is required"),
   password: Yup.string()
     .min(8, "min character")
     .matches(/(?=.*[a-z])/, "lowercase")

@@ -11,7 +11,6 @@ import FormHelperText from "@mui/material/FormHelperText";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
@@ -116,35 +115,6 @@ export default function SignUpForm(props) {
           />
           <FormHelperText id="component-error-text">
             {errors.name?.message}
-          </FormHelperText>
-        </FormControl>
-        <FormControl
-          className="mt-4"
-          error={errors.username}
-          variant="standard"
-        >
-          <InputLabel htmlFor="signUpUsername">User Name</InputLabel>
-          <Input
-            id="signUpUsername"
-            {...register("username")}
-            onChange={(e) => {
-              setValue("username", e.target.value, {
-                shouldValidate: true,
-              });
-            }}
-            onBlur={(e) => {
-              setValue("username", e.target.value, {
-                shouldValidate: true,
-              });
-            }}
-            startAdornment={
-              <InputAdornment position="start">
-                <AccountCircleIcon />
-              </InputAdornment>
-            }
-          />
-          <FormHelperText id="component-error-text">
-            {errors.username?.message}
           </FormHelperText>
         </FormControl>
         <FormControl

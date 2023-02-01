@@ -61,8 +61,9 @@ export default function UserPage(props) {
     router.replace(router.asPath);
   };
 
-  const { showMorePosts, fetchMorePosts, removePostService } = usePosts();
-  const { addOrRemoveFriendService } = useUsers();
+  const { postsFetch, showMorePosts, fetchMorePosts, removePostService } =
+    usePosts();
+  const { addOrRemoveFriendService, updateUser } = useUsers();
   const currentUserFetch = useCurrentUser();
   const currentUser = currentUserFetch?.data?.data;
 
@@ -92,6 +93,10 @@ export default function UserPage(props) {
             user={props.user}
             refreshData={refreshData}
             addOrRemoveFriendService={addOrRemoveFriendService}
+            currentUser={currentUser}
+            currentUserFetch={currentUserFetch}
+            postsFetch={postsFetch}
+            updateUser={updateUser}
           />
           <InfiniteScroll
             dataLength={showMorePosts.posts.length}

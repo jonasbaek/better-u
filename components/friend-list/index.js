@@ -67,9 +67,7 @@ export default function FriendList(props) {
                   <span className={styles.postProfileName}>
                     {friend?.user.name}
                   </span>
-                  <span className={styles.postProfileSubText}>
-                    {friend?.user.username}
-                  </span>
+                  <span className={styles.postProfileSubText}></span>
                 </div>
               </div>
               <IconButton

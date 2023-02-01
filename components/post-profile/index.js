@@ -1,6 +1,5 @@
 import AvatarComponent from "../avatar";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import { IconButton } from "@mui/material";
+import EditModal from "../edit-modal";
 import styles from "../../styles/styles.module.scss";
 
 export default function PostProfile(props) {
@@ -18,9 +17,12 @@ export default function PostProfile(props) {
             </span>
           </div>
         </div>
-        <IconButton>
-          <ManageAccountsIcon />
-        </IconButton>
+        <EditModal
+          currentUser={props.currentUser}
+          currentUserFetch={props.currentUserFetch}
+          postsFetch={props.postsFetch}
+          updateUser={props.updateUser}
+        />
       </div>
       <span className={styles.divisor} />
     </section>

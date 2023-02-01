@@ -1,5 +1,6 @@
 import Avatar from "@mui/material/Avatar";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AvatarComponent(props) {
   const userId = props.user._id ? props.user._id : props.user.id;
@@ -12,7 +13,12 @@ export default function AvatarComponent(props) {
           height: props.height ? props.height : 45,
         }}
       >
-        {props.user.username}
+        <Image
+          src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.user?.avatar}`}
+          className="text-center"
+          alt="Profile photo"
+          fill
+        />
       </Avatar>
     </Link>
   );
