@@ -1,4 +1,4 @@
-import Avatar from "@mui/material/Avatar";
+import AvatarComponent from "../avatar";
 import styles from "../../styles/styles.module.scss";
 import AccountMenu from "../account-menu";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { Search } from "@mui/icons-material";
 import { useState, useEffect, useCallback } from "react";
 import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/base/ClickAwayListener";
+import Image from "next/image";
 
 export default function NavBar(props) {
   const [searchValue, setSearchValue] = useState();
@@ -97,9 +98,7 @@ export default function NavBar(props) {
                 debounceResult.map((user) => {
                   return (
                     <div key={user._id} className="d-flex my-3">
-                      <Avatar sx={{ width: 35, height: 35 }}>
-                        {user.name}
-                      </Avatar>
+                      <AvatarComponent user={user} width={35} height={35} />
                       <div className="d-flex flex-column mt-2 ms-3">
                         <span className={styles.searchResultName}>
                           {user.name}

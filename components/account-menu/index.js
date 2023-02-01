@@ -1,6 +1,8 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
+import Link from "next/link";
+import Image from "next/image";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -44,7 +46,14 @@ export default function AccountMenu(props) {
             aria-expanded={open ? "true" : undefined}
           >
             <Avatar sx={{ width: 45, height: 45 }}>
-              {props.currentUser?.username}
+              {!!props.currentUser?.avatar ? (
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.currentUser?.avatar}`}
+                  className="text-center"
+                  alt="Profile photo"
+                  fill
+                />
+              ) : null}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -84,9 +93,24 @@ export default function AccountMenu(props) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
-          <Avatar /> Profile
-        </MenuItem>
+        <Link
+          href={`/${props.currentUser._id}`}
+          className="text-decoration-none text-black"
+        >
+          <MenuItem>
+            <Avatar>
+              {!!props.currentUser?.avatar ? (
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.currentUser?.avatar}`}
+                  className="text-center"
+                  alt="Profile photo"
+                  fill
+                />
+              ) : null}
+            </Avatar>
+            Profile
+          </MenuItem>
+        </Link>
         <Divider />
         <MenuItem>
           <ListItemIcon>

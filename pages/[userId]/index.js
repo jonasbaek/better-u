@@ -87,7 +87,7 @@ export default function UserPage(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <NavBar token={props.token} />
+        <NavBar token={props.token} currentUser={currentUser} />
         <div className={styles.profilePageContainer}>
           <Profile
             user={props.user}

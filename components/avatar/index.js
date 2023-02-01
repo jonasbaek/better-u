@@ -4,6 +4,7 @@ import Image from "next/image";
 
 export default function AvatarComponent(props) {
   const userId = props.user._id ? props.user._id : props.user.id;
+  console.log(!!props.user?.avatar);
 
   return (
     <Link href={`/${userId}`} className="text-decoration-none">
@@ -13,12 +14,15 @@ export default function AvatarComponent(props) {
           height: props.height ? props.height : 45,
         }}
       >
-        <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.user?.avatar}`}
-          className="text-center"
-          alt="Profile photo"
-          fill
-        />
+        {!!props.user?.avatar ? (
+          <Image
+            src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.user?.avatar}`}
+            className="text-center"
+            alt="Profile photo"
+            fill
+          />
+        ) : null}
+        {props.text}
       </Avatar>
     </Link>
   );

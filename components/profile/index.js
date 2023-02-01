@@ -77,12 +77,14 @@ export default function Profile(props) {
               height: 150,
             }}
           >
-            <Image
-              src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.user?.avatar}`}
-              className="text-center"
-              alt="Profile photo"
-              fill
-            />
+            {!!props.user?.avatar ? (
+              <Image
+                src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.user?.avatar}`}
+                className="text-center"
+                alt="Profile photo"
+                fill
+              />
+            ) : null}
           </Avatar>
           <div className="ms-4 fw-bold lh-1">
             <h1 className="mt-2">{props.user.name}</h1>
