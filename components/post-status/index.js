@@ -9,6 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState, useRef, useEffect } from "react";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 export default function PostStatus(props) {
   const [imageUpload, setImageUpload] = useState();
@@ -67,13 +68,12 @@ export default function PostStatus(props) {
               className={styles.postForm}
               onSubmit={handleSubmit(onSubmit)}
             >
-              <InputBase
+              <TextareaAutosize
                 type="text"
                 className={styles.postControl}
                 placeholder="What's on your mind..."
                 {...register("text")}
               />
-
               {previewImage && (
                 <div className={styles.previewImageContainer}>
                   <Image
