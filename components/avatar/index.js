@@ -13,16 +13,16 @@ export default function AvatarComponent(props) {
           height: props.height ? props.height : 45,
         }}
       >
-        {!!props.user?.avatar ? (
+        {props.user?.avatar && (
           <Image
             src={`${process.env.NEXT_PUBLIC_API_URL}/public/uploads/avatars/${props.user?.avatar}`}
             className="text-center"
             alt="Profile photo"
             fill
           />
-        ) : null}
-        {props.text}
+        )}
       </Avatar>
+      {props.text}
     </Link>
   );
 }
