@@ -94,7 +94,7 @@ export default function AccountMenu(props) {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <Link
-          href={`/${props.currentUser._id}`}
+          href={`/${props.currentUser?._id}`}
           className="text-decoration-none text-black"
         >
           <MenuItem>

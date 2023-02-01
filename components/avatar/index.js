@@ -4,7 +4,6 @@ import Image from "next/image";
 
 export default function AvatarComponent(props) {
   const userId = props.user._id ? props.user._id : props.user.id;
-  console.log(!!props.user?.avatar);
 
   return (
     <Link href={`/${userId}`} className="text-decoration-none">

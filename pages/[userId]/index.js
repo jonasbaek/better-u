@@ -71,12 +71,10 @@ export default function UserPage(props) {
 
   const filterPostsFromUser = () => {
     const postsFromUser = showMorePosts.posts.filter(
-      (post) => post.user.id === currentUser._id
+      (post) => post.user.id === props.user._id
     );
     return postsFromUser;
   };
-
-  console.log(filterPostsFromUser());
 
   return (
     <>
@@ -109,7 +107,7 @@ export default function UserPage(props) {
               </p>
             }
           >
-            {showMorePosts.posts?.map((post, i) => {
+            {filterPostsFromUser()?.map((post, i) => {
               return (
                 <Post
                   key={i}
