@@ -1,6 +1,6 @@
 export const display = {
-  xl: 1040,
-  lg: 960,
-  md: 720,
-  sm: 540,
+  xl: 1200,
+  lg: 992,
+  md: 760,
+  sm: 576,
 };

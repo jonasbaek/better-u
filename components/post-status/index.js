@@ -59,8 +59,8 @@ export default function PostStatus(props) {
             <div className="me-4">
               <AvatarComponent
                 user={props.data.currentUser}
-                width={60}
-                height={60}
+                width={55}
+                height={55}
               />
             </div>
             <form

@@ -80,19 +80,15 @@ export default function BetterUPage(props) {
         ) : (
           <>
             <NavBar token={props.token} currentUser={data.currentUser} />
-            <div className="row mx-2">
-              <div
-                className={`p-2 ${
-                  windowSize[0] > display.lg ? "col-3" : "col-4"
-                }`}
-              >
+            <div className="row m-auto">
+              <div className="col-12 col-md-4 col-lg-3 px-2">
                 <PostProfile
                   currentUser={data.currentUser}
                   currentUserFetch={currentUserFetch}
                   postsFetch={postsFetch}
                   updateUser={updateUser}
                 />
-                {windowSize[0] <= display.lg && windowSize[0] > display.md && (
+                {windowSize[0] <= display.lg && windowSize[0] >= display.md && (
                   <FriendList
                     currentUser={data.currentUser}
                     addOrRemoveFriendService={addOrRemoveFriendService}
@@ -101,11 +97,7 @@ export default function BetterUPage(props) {
                 )}
               </div>
 
-              <div
-                className={`p-2 ${
-                  windowSize[0] > display.lg ? "col-6" : "col-8"
-                }`}
-              >
+              <div className="col-12 col-md-8 col-lg-6 px-2">
                 <PostStatus data={data} createPostService={createPostService} />
                 <InfiniteScroll
                   dataLength={showMorePosts.posts.length}
@@ -134,8 +126,8 @@ export default function BetterUPage(props) {
                   })}
                 </InfiniteScroll>
               </div>
-              {windowSize[0] > display.lg && (
-                <div className="col-3 p-2">
+              {windowSize[0] >= display.lg && (
+                <div className="col-3 px-2">
                   <FriendList
                     currentUser={data.currentUser}
                     addOrRemoveFriendService={addOrRemoveFriendService}

@@ -62,6 +62,7 @@ $white: #ffffff;
   .postForm {
     width: 100%;
     .postControl {
+      font-size: 15px;
       padding: 15px 35px 18px;
       background: white;
       width: 100%;
@@ -103,7 +104,6 @@ $white: #ffffff;
 
 .postContainer {
   background: $blue;
-  margin: 15px 0;
   border-radius: 10px;
   padding: 30px 36px;
 
@@ -129,7 +129,7 @@ $white: #ffffff;
 
 .postProfileContainer {
   background: $blue;
-  margin: 8px 0;
+  margin-top: 8px;
   border-radius: 10px;
   padding: 20px 30px;
 
@@ -183,10 +183,10 @@ $white: #ffffff;
 .profilePageContainer {
   max-width: 1000px;
   margin: auto;
-  padding: 0 20px;
+  padding: 0 8px;
   .profileContainer {
     background: $blue;
-    margin: 20px auto 5px;
+    margin: 8px auto;
     border-radius: 10px;
     padding: 20px 30px;
   }
