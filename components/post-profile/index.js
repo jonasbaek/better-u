@@ -1,5 +1,5 @@
 import AvatarComponent from "../avatar";
-import EditModal from "../edit-modal";
+import EditProfileModal from "../edit-profile-modal";
 import styles from "../../styles/styles.module.scss";
 
 export default function PostProfile(props) {
@@ -21,7 +21,7 @@ export default function PostProfile(props) {
             {props.currentUser?.name}
           </span>
         </div>
-        <EditModal
+        <EditProfileModal
           currentUser={props.currentUser}
           currentUserFetch={props.currentUserFetch}
           postsFetch={props.postsFetch}

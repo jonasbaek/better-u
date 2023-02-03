@@ -1,7 +1,7 @@
 import styles from "../../styles/styles.module.scss";
 import Avatar from "@mui/material/Avatar";
 import AvatarComponent from "../avatar";
-import EditModal from "../edit-modal";
+import EditProfileModal from "../edit-profile-modal";
 import { Snackbar } from "@mui/material";
 import { useState, Fragment } from "react";
 import Button from "@mui/material/Button";
@@ -112,7 +112,7 @@ export default function Profile(props) {
             )}
           </IconButton>
         ) : (
-          <EditModal
+          <EditProfileModal
             currentUser={props.currentUser}
             currentUserFetch={props.currentUserFetch}
             postsFetch={props.postsFetch}
