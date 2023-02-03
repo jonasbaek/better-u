@@ -68,6 +68,8 @@ export default function UserPage(props) {
     updateUser,
     currentUserFetch,
     searchByNameFetch,
+    updatePostService,
+    likePostService,
   } = useContext(FetchContext);
 
   const currentUser = currentUserFetch?.data?.data;
@@ -125,6 +127,7 @@ export default function UserPage(props) {
                   currentUser={currentUser}
                   currentUserFetch={currentUserFetch}
                   removePostService={removePostService}
+                  updatePostService={updatePostService}
                   likePostService={() =>
                     likePostService(post.id, currentUserFetch)
                   }

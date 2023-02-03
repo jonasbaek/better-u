@@ -152,6 +152,27 @@ const FetchContextProvider = ({ children }) => {
     }
   };
 
+  const updatePostService = async (postId, formData) => {
+    try {
+      const res = await axios.patch(
+        `${apiUrl}/posts/${postId}`,
+        formData,
+        fetchOptions
+      );
+      if (res) {
+        const { data } = await postsFetch.mutate();
+        setShowMorePosts({
+          nextUrl: data.nextUrl,
+          hasMore: !(data.posts.length === data.total),
+          posts: [...data.posts],
+          dirty: true,
+        });
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
   const fetchMorePosts = () => {
     setShowMorePosts({
       nextUrl: postsFetch?.data?.data.nextUrl,
@@ -178,6 +199,7 @@ const FetchContextProvider = ({ children }) => {
         addOrRemoveFriendService,
         searchByNameFetch,
         usersFetch,
+        updatePostService,
       }}
     >
       {children}

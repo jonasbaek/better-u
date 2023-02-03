@@ -195,6 +195,11 @@ $white: #ffffff;
   }
 }
 
+.editPostText {
+  width: 500px !important;
+  padding: 5px;
+}
+
 @media (min-width: 992px) {
   .layerBackground {
     .firstLayer {

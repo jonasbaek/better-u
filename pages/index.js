@@ -43,6 +43,7 @@ export default function BetterUPage(props) {
     updateUser,
     currentUserFetch,
     searchByNameFetch,
+    updatePostService,
   } = useContext(FetchContext);
 
   useEffect(() => {
@@ -128,6 +129,7 @@ export default function BetterUPage(props) {
                         currentUser={data.currentUser}
                         currentUserFetch={currentUserFetch}
                         removePostService={removePostService}
+                        updatePostService={updatePostService}
                         likePostService={() =>
                           likePostService(post.id, currentUserFetch)
                         }

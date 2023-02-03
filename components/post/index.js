@@ -5,16 +5,18 @@ import { IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import EditPostModal from "../edit-post-modal";
+import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 
 export default function Post(props) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
   const openSettings = Boolean(anchorEl);
 
   const handleClickSettings = (event) => {
@@ -69,7 +71,6 @@ export default function Post(props) {
                 id="account-menu"
                 open={openSettings}
                 onClose={handleCloseSettings}
-                onClick={handleCloseSettings}
                 PaperProps={{
                   elevation: 0,
                   sx: {
@@ -99,19 +100,20 @@ export default function Post(props) {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem>
+                <MenuItem onClick={() => setOpenModal(true)}>
                   <ListItemIcon>
                     <EditIcon />
                   </ListItemIcon>
                   Edit
                 </MenuItem>
                 <MenuItem
-                  onClick={async () =>
+                  onClick={async () => {
                     await props.removePostService(
                       props.post.id,
                       props.currentUserFetch
-                    )
-                  }
+                    );
+                    handleCloseSettings();
+                  }}
                 >
                   <ListItemIcon>
                     <DeleteIcon />
@@ -152,6 +154,12 @@ export default function Post(props) {
           {props.post?.comments?.length}
         </div>
       </div>
+      <EditPostModal
+        post={props.post}
+        updatePostService={props.updatePostService}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </section>
   );
 }
