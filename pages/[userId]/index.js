@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import axios from "axios";
@@ -6,9 +6,7 @@ import Head from "next/head";
 import Post from "../../components/post";
 import NavBar from "../../components/nav-bar";
 import Profile from "../../components/profile";
-import useUsers from "../../customHooks/useUsers";
-import usePosts from "../../customHooks/usePosts";
-import useCurrentUser from "../../customHooks/useCurrentUser";
+import { FetchContext } from "../../providers/FetchContextProvider";
 import useValidateToken from "../../customHooks/useValidateToken";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styles from "../../styles/styles.module.scss";
@@ -56,25 +54,33 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
 export default function UserPage(props) {
   useValidateToken();
+  const [postsFromUserProfile, setPostsFromUserProfile] = useState([]);
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
   };
+  const {
+    postsFetch,
+    showMorePosts,
+    fetchMorePosts,
+    removePostService,
+    addOrRemoveFriendService,
+    updateUser,
+    currentUserFetch,
+    searchByNameFetch,
+  } = useContext(FetchContext);
 
-  const { postsFetch, showMorePosts, fetchMorePosts, removePostService } =
-    usePosts();
-  const { addOrRemoveFriendService, updateUser } = useUsers();
-  const currentUserFetch = useCurrentUser();
   const currentUser = currentUserFetch?.data?.data;
 
-  const [postsFromUserProfile, setPostsFromUserProfile] = useState([]);
-
-  const filterPostsFromUser = () => {
-    const postsFromUser = showMorePosts.posts.filter(
-      (post) => post.user.id === props.user._id
-    );
-    return postsFromUser;
-  };
+  useEffect(() => {
+    const filterPostsFromUser = () => {
+      const postsFromUser = showMorePosts.posts.filter(
+        (post) => post.user.id === props.user._id
+      );
+      return postsFromUser;
+    };
+    setPostsFromUserProfile(filterPostsFromUser());
+  }, [props.user, showMorePosts]);
 
   return (
     <>
@@ -85,7 +91,11 @@ export default function UserPage(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <NavBar token={props.token} currentUser={currentUser} />
+        <NavBar
+          token={props.token}
+          currentUser={currentUser}
+          searchByNameFetch={searchByNameFetch}
+        />
         <div className={styles.profilePageContainer}>
           <Profile
             user={props.user}
@@ -107,7 +117,7 @@ export default function UserPage(props) {
               </p>
             }
           >
-            {filterPostsFromUser()?.map((post, i) => {
+            {postsFromUserProfile?.map((post, i) => {
               return (
                 <Post
                   key={i}

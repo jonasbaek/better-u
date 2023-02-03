@@ -33,7 +33,7 @@ export default function PostStatus(props) {
     }
     setValue("text", "");
     setImageUpload("");
-    await props.createPostService(form);
+    await props.createPostService(form, props.currentUserFetch);
   };
 
   const handleClick = () => {

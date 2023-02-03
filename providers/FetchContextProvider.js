@@ -1,10 +1,13 @@
+import { createContext, useState, useEffect } from "react";
 import useSWR from "swr";
 import axios from "axios";
 import { getCookie } from "cookies-next";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import useSWRMutation from "swr/mutation";
 
-export default function usePosts() {
+export const FetchContext = createContext();
+
+const FetchContextProvider = ({ children }) => {
   const [showMorePosts, setShowMorePosts] = useState({
     nextUrl: "",
     posts: [],
@@ -22,15 +25,23 @@ export default function usePosts() {
   };
   const fetcher = async (url, pagination = "") =>
     await axios.get(`${url}${pagination ? pagination : ""}`, fetchOptions);
+  const searchFetcher = async (url, { arg }) =>
+    await axios.get(`${url}/${arg}`, fetchOptions);
 
   const postsFetch = useSWR(
     [`${apiUrl}/posts`, showMorePosts.nextUrl],
     ([url, pagination]) => fetcher(url, pagination)
   );
+  const currentUserFetch = useSWR(`${apiUrl}/user/me`, fetcher);
+  const searchByNameFetch = useSWRMutation(
+    `${apiUrl}/user/search`,
+    searchFetcher
+  );
+  const usersFetch = useSWR(`${apiUrl}/user`, fetcher);
 
   useEffect(() => {
     const waitForInitialDataFetch = () => {
-      setTimeout(() => {
+      setTimeout(async () => {
         if (!postsFetch.isLoading) {
           const { data } = postsFetch;
           if (!showMorePosts.dirty && data) {
@@ -47,10 +58,49 @@ export default function usePosts() {
     waitForInitialDataFetch();
   }, [postsFetch.isLoading]);
 
-  const createPostService = async (formData) => {
+  const addOrRemoveFriendService = async (
+    friendId,
+    currentUserFetch,
+    refreshData
+  ) => {
+    try {
+      const res = await axios.patch(
+        `${apiUrl}/user/add/${friendId}`,
+        {},
+        fetchOptions
+      );
+      if (res) {
+        currentUserFetch ? currentUserFetch.mutate() : null;
+        refreshData ? refreshData() : null;
+        toast.success(`${res.data.message}`);
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
+  const updateUser = async (userId, formData, currentUserFetch, postsFetch) => {
+    try {
+      const res = await axios.patch(
+        `${apiUrl}/user/${userId}`,
+        formData,
+        fetchOptions
+      );
+      if (res) {
+        currentUserFetch.mutate();
+        postsFetch.mutate();
+        toast.success(`${res.data.message}`);
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
+  const createPostService = async (formData, currentUserFetch) => {
     try {
       await axios.post(`${apiUrl}/posts`, formData, fetchOptions);
       const { data } = await postsFetch.mutate();
+      await currentUserFetch.mutate();
       setShowMorePosts({
         nextUrl: data.nextUrl,
         hasMore: !(data.posts.length === data.total),
@@ -63,10 +113,11 @@ export default function usePosts() {
     }
   };
 
-  const removePostService = async (postId) => {
+  const removePostService = async (postId, currentUserFetch) => {
     try {
       await axios.delete(`${apiUrl}/posts/${postId}`, fetchOptions);
       const { data } = await postsFetch.mutate();
+      await currentUserFetch.mutate();
       setShowMorePosts({
         nextUrl: data.nextUrl,
         hasMore: !(data.posts.length === data.total),
@@ -112,13 +163,26 @@ export default function usePosts() {
     });
   };
 
-  return {
-    showMorePosts,
-    setShowMorePosts,
-    postsFetch,
-    createPostService,
-    removePostService,
-    likePostService,
-    fetchMorePosts,
-  };
-}
+  return (
+    <FetchContext.Provider
+      value={{
+        showMorePosts,
+        setShowMorePosts,
+        postsFetch,
+        currentUserFetch,
+        createPostService,
+        removePostService,
+        likePostService,
+        fetchMorePosts,
+        updateUser,
+        addOrRemoveFriendService,
+        searchByNameFetch,
+        usersFetch,
+      }}
+    >
+      {children}
+    </FetchContext.Provider>
+  );
+};
+
+export default FetchContextProvider;

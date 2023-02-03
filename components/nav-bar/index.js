@@ -2,7 +2,6 @@ import Avatar from "@mui/material/Avatar";
 import styles from "../../styles/styles.module.scss";
 import AccountMenu from "../account-menu";
 import Link from "next/link";
-import useUsers from "../../customHooks/useUsers";
 import { IconButton, InputBase } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Search } from "@mui/icons-material";
@@ -19,7 +18,6 @@ export default function NavBar(props) {
   const [debounceResult, setDebounceResult] = useState(searchValue);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { searchByNameFetch } = useUsers();
   const [anchorEl, setAnchorEl] = useState(null);
   const windowSize = useWindowSize();
 
@@ -27,7 +25,7 @@ export default function NavBar(props) {
     setIsLoading(true);
     const timeoutId = setTimeout(async () => {
       if (searchValue && searchValue.trim() !== "") {
-        const { data } = await searchByNameFetch.trigger(searchValue);
+        const { data } = await props.searchByNameFetch.trigger(searchValue);
         setDebounceResult(data);
         setIsLoading(false);
       } else {

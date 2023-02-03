@@ -8,10 +8,8 @@ import Post from "../components/post";
 import { getCookie, deleteCookie } from "cookies-next";
 import styles from "../styles/styles.module.scss";
 import useWindowSize from "../customHooks/useWindowSize";
-import { useEffect, useState } from "react";
-import useCurrentUser from "../customHooks/useCurrentUser";
-import usePosts from "../customHooks/usePosts";
-import useUsers from "../customHooks/useUsers";
+import { useEffect, useState, useContext } from "react";
+import { FetchContext } from "../providers/FetchContextProvider";
 import useValidateToken from "../customHooks/useValidateToken";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { display } from "../util/display";
@@ -33,8 +31,6 @@ export default function BetterUPage(props) {
   useValidateToken();
   const [isLoading, setIsLoading] = useState(true);
   const windowSize = useWindowSize();
-  const { usersFetch, addOrRemoveFriendService, updateUser } = useUsers();
-  const currentUserFetch = useCurrentUser();
   const {
     showMorePosts,
     postsFetch,
@@ -42,7 +38,12 @@ export default function BetterUPage(props) {
     removePostService,
     likePostService,
     fetchMorePosts,
-  } = usePosts();
+    usersFetch,
+    addOrRemoveFriendService,
+    updateUser,
+    currentUserFetch,
+    searchByNameFetch,
+  } = useContext(FetchContext);
 
   useEffect(() => {
     const waitForInitialDataFetch = () => {
@@ -79,7 +80,11 @@ export default function BetterUPage(props) {
           <p>Loading</p>
         ) : (
           <>
-            <NavBar token={props.token} currentUser={data.currentUser} />
+            <NavBar
+              token={props.token}
+              currentUser={data.currentUser}
+              searchByNameFetch={searchByNameFetch}
+            />
             <div className="row m-auto">
               <div className="col-12 col-md-4 col-lg-3 px-2">
                 <PostProfile
@@ -98,7 +103,12 @@ export default function BetterUPage(props) {
               </div>
 
               <div className="col-12 col-md-8 col-lg-6 px-2">
-                <PostStatus data={data} createPostService={createPostService} />
+                <PostStatus
+                  data={data}
+                  createPostService={createPostService}
+                  currentUserFetch={currentUserFetch}
+                />
+
                 <InfiniteScroll
                   dataLength={showMorePosts.posts.length}
                   next={fetchMorePosts}

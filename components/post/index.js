@@ -107,7 +107,10 @@ export default function Post(props) {
                 </MenuItem>
                 <MenuItem
                   onClick={async () =>
-                    await props.removePostService(props.post.id)
+                    await props.removePostService(
+                      props.post.id,
+                      props.currentUserFetch
+                    )
                   }
                 >
                   <ListItemIcon>
