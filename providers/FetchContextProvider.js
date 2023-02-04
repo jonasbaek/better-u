@@ -99,7 +99,12 @@ const FetchContextProvider = ({ children }) => {
 
   const createPostService = async (formData, currentUserFetch) => {
     try {
-      await axios.post(`${apiUrl}/posts`, formData, fetchOptions);
+      await axios.post(`${apiUrl}/posts`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const { data } = await postsFetch.mutate();
       await currentUserFetch.mutate();
       setShowMorePosts({
@@ -108,6 +113,7 @@ const FetchContextProvider = ({ children }) => {
         posts: [...data.posts],
         dirty: true,
       });
+
       toast.success("Post created successfully");
     } catch (error) {
       toast.error(`${error}`);
