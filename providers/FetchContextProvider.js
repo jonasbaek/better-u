@@ -19,7 +19,7 @@ const FetchContextProvider = ({ children }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const fetchOptions = {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   };
@@ -81,11 +81,12 @@ const FetchContextProvider = ({ children }) => {
 
   const updateUser = async (userId, formData, currentUserFetch, postsFetch) => {
     try {
-      const res = await axios.patch(
-        `${apiUrl}/user/${userId}`,
-        formData,
-        fetchOptions
-      );
+      const res = await axios.patch(`${apiUrl}/user/${userId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res) {
         currentUserFetch.mutate();
         postsFetch.mutate();
@@ -167,6 +168,7 @@ const FetchContextProvider = ({ children }) => {
           posts: [...data.posts],
           dirty: true,
         });
+        toast.success(`${res.data.message}`);
       }
     } catch (error) {
       toast.error(`${error}`);

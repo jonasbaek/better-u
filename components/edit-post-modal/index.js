@@ -34,7 +34,7 @@ export default function EditPostModal(props) {
 
   useEffect(() => {
     setValue("text", props.post.text);
-  }, []);
+  }, [props.post]);
 
   return (
     <div>
