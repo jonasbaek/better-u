@@ -193,7 +193,7 @@ export default function NavBar(props) {
                         return (
                           <Link
                             key={user._id}
-                            href={`/${props.currentUser?._id}`}
+                            href={`/${user._id}`}
                             className="d-flex my-3 text-decoration-none text-black"
                           >
                             <Avatar>

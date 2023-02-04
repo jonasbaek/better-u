@@ -82,7 +82,7 @@ export default function EditModal(props) {
 
   useEffect(() => {
     setValue("name", props.currentUser.name);
-    setValue("description", props.currentUser.description);
+    setValue("description", props.currentUser?.description);
   }, []);
 
   return (
