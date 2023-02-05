@@ -5,7 +5,7 @@ import styles from "../../styles/styles.module.scss";
 export default function PostProfile(props) {
   const SumLikesFromPosts = () => {
     const ownPosts = props.currentUser?.posts;
-    const totalLikes = ownPosts.reduce(
+    const totalLikes = ownPosts?.reduce(
       (sum, post) => sum + post.likes.length,
       0
     );

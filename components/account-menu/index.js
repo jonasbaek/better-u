@@ -31,6 +31,7 @@ export default function AccountMenu(props) {
     deleteCookie("jwt");
     toast.success("You logged out");
     router.push("/login");
+    router.reload();
   };
 
   return (

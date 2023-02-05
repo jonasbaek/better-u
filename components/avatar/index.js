@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function AvatarComponent(props) {
-  const userId = props.user._id ? props.user._id : props.user.id;
+  const userId = props.user?._id ? props.user?._id : props.user?.id;
 
   return (
     <Link href={`/${userId}`} className="text-decoration-none">

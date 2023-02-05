@@ -44,7 +44,7 @@ export default function EditModal(props) {
   };
 
   const handleClose = () => {
-    setValue("name", props.currentUser.name);
+    setValue("name", props.currentUser?.name);
     setValue("description", props.currentUser.description);
     setImageUpload("");
     setPreviewImage("");
@@ -81,7 +81,7 @@ export default function EditModal(props) {
   }, [imageUpload]);
 
   useEffect(() => {
-    setValue("name", props.currentUser.name);
+    setValue("name", props.currentUser?.name);
     setValue("description", props.currentUser?.description);
   }, []);
 

@@ -59,6 +59,7 @@ export default function Home() {
         router.push("/");
         toast.success("You are logged!");
         setIsLoading(false);
+        router.reload();
       }, 600);
     } catch (err) {
       toast.error(`${err?.response?.data?.message}`);

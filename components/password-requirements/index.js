@@ -10,7 +10,7 @@ export default function PasswordRequirements(props) {
           <Image
             className={props.requirements.min ? styles.checkmark : "d-none"}
             src={checkIcon}
-            layout="fill"
+            fill
             alt="check-icon"
           />
         </span>
@@ -23,7 +23,7 @@ export default function PasswordRequirements(props) {
           <Image
             className={props.requirements.special ? styles.checkmark : "d-none"}
             src={checkIcon}
-            layout="fill"
+            fill
             alt="check-icon"
           />
         </span>
@@ -39,7 +39,7 @@ export default function PasswordRequirements(props) {
               props.requirements.uppercase ? styles.checkmark : "d-none"
             }
             src={checkIcon}
-            layout="fill"
+            fill
             alt="check-icon"
           />
         </span>
@@ -55,7 +55,7 @@ export default function PasswordRequirements(props) {
               props.requirements.lowercase ? styles.checkmark : "d-none"
             }
             src={checkIcon}
-            layout="fill"
+            fill
             alt="check-icon"
           />
         </span>
@@ -69,7 +69,7 @@ export default function PasswordRequirements(props) {
           <Image
             className={props.requirements.number ? styles.checkmark : "d-none"}
             src={checkIcon}
-            layout="fill"
+            fill
             alt="check-icon"
           />
         </span>

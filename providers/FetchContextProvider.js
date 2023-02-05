@@ -14,6 +14,8 @@ const FetchContextProvider = ({ children }) => {
     hasMore: true,
     dirty: false,
   });
+  const [currentUser, setCurrentUser] = useState();
+  const [users, setUsers] = useState();
 
   const token = getCookie("jwt");
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -23,40 +25,50 @@ const FetchContextProvider = ({ children }) => {
       Authorization: `Bearer ${token}`,
     },
   };
+  const fetchMultipartOptions = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   const fetcher = async (url, pagination = "") =>
     await axios.get(`${url}${pagination ? pagination : ""}`, fetchOptions);
   const searchFetcher = async (url, { arg }) =>
     await axios.get(`${url}/${arg}`, fetchOptions);
 
   const postsFetch = useSWR(
-    [`${apiUrl}/posts`, showMorePosts.nextUrl],
+    token ? [`${apiUrl}/posts`, showMorePosts.nextUrl] : null,
     ([url, pagination]) => fetcher(url, pagination)
   );
-  const currentUserFetch = useSWR(`${apiUrl}/user/me`, fetcher);
+  const currentUserFetch = useSWR(token ? `${apiUrl}/user/me` : null, fetcher);
   const searchByNameFetch = useSWRMutation(
-    `${apiUrl}/user/search`,
+    token ? `${apiUrl}/user/search` : null,
     searchFetcher
   );
-  const usersFetch = useSWR(`${apiUrl}/user`, fetcher);
+  const usersFetch = useSWR(token ? `${apiUrl}/user` : null, fetcher);
 
   useEffect(() => {
-    const waitForInitialDataFetch = () => {
-      setTimeout(async () => {
-        if (!postsFetch.isLoading) {
-          const { data } = postsFetch;
-          if (!showMorePosts.dirty && data) {
-            setShowMorePosts({
-              nextUrl: data.data.nextUrl,
-              posts: [...data.data.posts],
-              hasMore: !(data.data.posts.length === data.data.total),
-              dirty: true,
-            });
-          }
-        }
-      }, 300);
-    };
-    waitForInitialDataFetch();
-  }, [postsFetch.isLoading]);
+    setCurrentUser(currentUserFetch?.data?.data);
+    setUsers(usersFetch?.data?.data);
+
+    const { data } = postsFetch;
+    if (!showMorePosts.dirty && data) {
+      setShowMorePosts({
+        nextUrl: data.data.nextUrl,
+        posts: [...data.data.posts],
+        hasMore: !(data.data.posts.length === data.data.total),
+        dirty: true,
+      });
+    }
+  }, [
+    currentUserFetch.isValidating,
+    usersFetch.isValidating,
+    currentUserFetch.isLoading,
+    usersFetch.isLoading,
+    postsFetch.isValidating,
+    postsFetch.isLoading,
+  ]);
 
   const addOrRemoveFriendService = async (
     friendId,
@@ -81,12 +93,11 @@ const FetchContextProvider = ({ children }) => {
 
   const updateUser = async (userId, formData, currentUserFetch, postsFetch) => {
     try {
-      const res = await axios.patch(`${apiUrl}/user/${userId}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.patch(
+        `${apiUrl}/user/${userId}`,
+        formData,
+        fetchMultipartOptions
+      );
       if (res) {
         currentUserFetch.mutate();
         postsFetch.mutate();
@@ -99,12 +110,7 @@ const FetchContextProvider = ({ children }) => {
 
   const createPostService = async (formData, currentUserFetch) => {
     try {
-      await axios.post(`${apiUrl}/posts`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(`${apiUrl}/posts`, formData, fetchMultipartOptions);
       const { data } = await postsFetch.mutate();
       await currentUserFetch.mutate();
       setShowMorePosts({
@@ -208,6 +214,8 @@ const FetchContextProvider = ({ children }) => {
         searchByNameFetch,
         usersFetch,
         updatePostService,
+        currentUser,
+        users,
       }}
     >
       {children}

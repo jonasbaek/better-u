@@ -70,9 +70,8 @@ export default function UserPage(props) {
     searchByNameFetch,
     updatePostService,
     likePostService,
+    currentUser,
   } = useContext(FetchContext);
-
-  const currentUser = currentUserFetch?.data?.data;
 
   useEffect(() => {
     const filterPostsFromUser = () => {

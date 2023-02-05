@@ -58,7 +58,7 @@ export default function PostStatus(props) {
           <div className="d-flex">
             <div className="me-4">
               <AvatarComponent
-                user={props.data.currentUser}
+                user={props.currentUser}
                 width={55}
                 height={55}
               />

@@ -44,6 +44,7 @@ export default function BetterUPage(props) {
     currentUserFetch,
     searchByNameFetch,
     updatePostService,
+    currentUser,
   } = useContext(FetchContext);
 
   useEffect(() => {
@@ -61,12 +62,6 @@ export default function BetterUPage(props) {
     waitForInitialDataFetch();
   }, [usersFetch.isLoading, currentUserFetch.isLoading, postsFetch.isLoading]);
 
-  const data = {
-    currentUser: currentUserFetch?.data?.data,
-    posts: postsFetch?.data?.data,
-    users: usersFetch?.data?.data,
-  };
-
   return (
     <>
       <Head>
@@ -83,20 +78,20 @@ export default function BetterUPage(props) {
           <>
             <NavBar
               token={props.token}
-              currentUser={data.currentUser}
+              currentUser={currentUser}
               searchByNameFetch={searchByNameFetch}
             />
             <div className="row m-auto">
               <div className="col-12 col-md-4 col-lg-3 px-2">
                 <PostProfile
-                  currentUser={data.currentUser}
+                  currentUser={currentUser}
                   currentUserFetch={currentUserFetch}
                   postsFetch={postsFetch}
                   updateUser={updateUser}
                 />
                 {windowSize[0] <= display.lg && windowSize[0] >= display.md && (
                   <FriendList
-                    currentUser={data.currentUser}
+                    currentUser={currentUser}
                     addOrRemoveFriendService={addOrRemoveFriendService}
                     currentUserFetch={currentUserFetch}
                   />
@@ -105,7 +100,7 @@ export default function BetterUPage(props) {
 
               <div className="col-12 col-md-8 col-lg-6 px-2">
                 <PostStatus
-                  data={data}
+                  currentUser={currentUser}
                   createPostService={createPostService}
                   currentUserFetch={currentUserFetch}
                 />
@@ -126,7 +121,7 @@ export default function BetterUPage(props) {
                       <Post
                         key={i}
                         post={post}
-                        currentUser={data.currentUser}
+                        currentUser={currentUser}
                         currentUserFetch={currentUserFetch}
                         removePostService={removePostService}
                         updatePostService={updatePostService}
@@ -141,7 +136,7 @@ export default function BetterUPage(props) {
               {windowSize[0] >= display.lg && (
                 <div className="col-3 px-2">
                   <FriendList
-                    currentUser={data.currentUser}
+                    currentUser={currentUser}
                     addOrRemoveFriendService={addOrRemoveFriendService}
                     currentUserFetch={currentUserFetch}
                   />

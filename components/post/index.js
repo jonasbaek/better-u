@@ -33,7 +33,7 @@ export default function Post(props) {
 
   const isPostLikedFromCurrentUser = () => {
     const postLikesFromCurrentUser = props.currentUser?.likes;
-    return postLikesFromCurrentUser.some(
+    return postLikesFromCurrentUser?.some(
       (like) => like.post === props?.post?.id
     );
   };
