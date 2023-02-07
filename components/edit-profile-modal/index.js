@@ -129,6 +129,11 @@ export default function EditModal(props) {
             <FormControl className="mt-4" variant="standard">
               <InputLabel htmlFor="editDescription">Description</InputLabel>
               <Input
+                inputProps={{ maxLength: 80 }}
+                multiline={true}
+                rows={4}
+                maxLength="200"
+                sx={{ alignItems: "baseline" }}
                 id="editDescription"
                 {...register("description")}
                 onChange={(e) => {
