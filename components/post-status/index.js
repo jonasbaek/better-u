@@ -69,6 +69,8 @@ export default function PostStatus(props) {
               onSubmit={handleSubmit(onSubmit)}
             >
               <TextareaAutosize
+                maxLength="2000"
+                maxRows={8}
                 type="text"
                 className={styles.postControl}
                 placeholder="What's on your mind..."

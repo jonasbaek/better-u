@@ -7,17 +7,38 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "@mui/material/Menu";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import EditPostModal from "../edit-post-modal";
 import EditIcon from "@mui/icons-material/Edit";
-import { useState } from "react";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
+import postCommentSchema from "./validation";
+import { useState, useRef, useEffect } from "react";
+import SendIcon from "@mui/icons-material/Send";
+import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import Comment from "../comment";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 export default function Post(props) {
+  const [comments, setComments] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [openComments, setOpenComments] = useState(false);
   const openSettings = Boolean(anchorEl);
+  const sendRef = useRef();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(postCommentSchema),
+  });
 
   const handleClickSettings = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,6 +46,20 @@ export default function Post(props) {
 
   const handleCloseSettings = () => {
     setAnchorEl(null);
+  };
+
+  const fetchComments = async () => {
+    const comment = await props.commentsFetch.trigger(
+      `${props.post.id}/comments`
+    );
+    if (comment) setComments(comment.data);
+  };
+
+  const handleShowComments = async () => {
+    setOpenComments(!openComments);
+    if (!openComments) {
+      await fetchComments();
+    }
   };
 
   const isCurrentUserPost = () => {
@@ -42,6 +77,27 @@ export default function Post(props) {
   const f = new Intl.DateTimeFormat("en-us", {
     dateStyle: "full",
   });
+
+  const handleSendClick = () => {
+    sendRef.current.click();
+  };
+
+  const handleCommentsPagination = async (url) => {
+    if (url) {
+      const comment = await props.commentsFetch.trigger(
+        `${props.post.id}/comments/${url}`
+      );
+      if (comment) {
+        setComments(comment.data);
+      }
+    }
+  };
+
+  const onSubmit = async (formData) => {
+    await props.createCommentService(props.post.id, formData);
+    fetchComments();
+    setValue("text", "");
+  };
 
   return (
     <section className={styles.postContainer}>
@@ -136,7 +192,7 @@ export default function Post(props) {
           layout="responsive"
         />
       )}
-      <div className="d-flex mt-5">
+      <div className="d-flex mt-3">
         <div>
           <IconButton onClick={async () => await props.likePostService()}>
             {isPostLikedFromCurrentUser() ? (
@@ -148,12 +204,71 @@ export default function Post(props) {
           {props.post?.likes?.length}
         </div>
         <div>
-          <IconButton sx={{ ml: 4 }}>
+          <IconButton sx={{ ml: 4 }} onClick={handleShowComments}>
             <ChatBubbleOutlineIcon />
           </IconButton>
           {props.post?.comments?.length}
         </div>
       </div>
+      {openComments && (
+        <div>
+          <span className={styles.divisor} />
+          {comments?.comments?.map((comment) => (
+            <div key={comment.id} className="mb-4">
+              <Comment comment={comment} />
+            </div>
+          ))}
+
+          <div className={styles.showMoreComment}>
+            {comments?.previousUrl && (
+              <IconButton
+                onClick={() => handleCommentsPagination(comments?.previousUrl)}
+              >
+                <NavigateBeforeIcon />
+              </IconButton>
+            )}
+            <span>
+              {comments?.limit + comments?.offset > comments?.total
+                ? comments?.total
+                : comments?.limit + comments?.offset}{" "}
+              from {comments?.total}
+            </span>
+            {comments?.nextUrl && (
+              <IconButton
+                onClick={() => handleCommentsPagination(comments?.nextUrl)}
+              >
+                <NavigateNextIcon />
+              </IconButton>
+            )}
+          </div>
+
+          <form
+            className="w-100 d-flex position-relative align-items-center"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <TextareaAutosize
+              maxLength="280"
+              type="text"
+              className={styles.commentControl}
+              placeholder="Write a comment..."
+              {...register("text")}
+            />
+            <div className="d-flex bg-white position-absolute rounded-pill end-0 pe-3">
+              <IconButton>
+                <EmojiEmotionsIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  handleSendClick();
+                }}
+              >
+                <SendIcon />
+              </IconButton>
+            </div>
+            <button type="submit" hidden ref={sendRef} />
+          </form>
+        </div>
+      )}
       <EditPostModal
         post={props.post}
         updatePostService={props.updatePostService}

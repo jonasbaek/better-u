@@ -36,6 +36,8 @@ const FetchContextProvider = ({ children }) => {
     await axios.get(`${url}${pagination ? pagination : ""}`, fetchOptions);
   const searchFetcher = async (url, { arg }) =>
     await axios.get(`${url}/${arg}`, fetchOptions);
+  const commentFetcher = async (url, { arg }) =>
+    await axios.get(`${url}/${arg}`, fetchOptions);
 
   const postsFetch = useSWR(
     token ? [`${apiUrl}/posts`, showMorePosts.nextUrl] : null,
@@ -47,6 +49,10 @@ const FetchContextProvider = ({ children }) => {
     searchFetcher
   );
   const usersFetch = useSWR(token ? `${apiUrl}/user` : null, fetcher);
+  const commentsFetch = useSWRMutation(
+    token ? `${apiUrl}/posts` : null,
+    commentFetcher
+  );
 
   useEffect(() => {
     setCurrentUser(currentUserFetch?.data?.data);
@@ -198,11 +204,32 @@ const FetchContextProvider = ({ children }) => {
     });
   };
 
+  const createCommentService = async (postId, formData) => {
+    try {
+      await axios.post(
+        `${apiUrl}/posts/${postId}/comments`,
+        formData,
+        fetchOptions
+      );
+      const { data } = await postsFetch.mutate();
+      setShowMorePosts({
+        nextUrl: data.nextUrl,
+        hasMore: !(data.posts.length === data.total),
+        posts: [...data.posts],
+        dirty: true,
+      });
+      toast.success("Comment successfully created");
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
   return (
     <FetchContext.Provider
       value={{
         showMorePosts,
         setShowMorePosts,
+        createCommentService,
         postsFetch,
         currentUserFetch,
         createPostService,
@@ -216,6 +243,7 @@ const FetchContextProvider = ({ children }) => {
         updatePostService,
         currentUser,
         users,
+        commentsFetch,
       }}
     >
       {children}

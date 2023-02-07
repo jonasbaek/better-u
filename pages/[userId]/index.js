@@ -71,6 +71,8 @@ export default function UserPage(props) {
     updatePostService,
     likePostService,
     currentUser,
+    createCommentService,
+    commentsFetch,
   } = useContext(FetchContext);
 
   useEffect(() => {
@@ -130,6 +132,8 @@ export default function UserPage(props) {
                   likePostService={() =>
                     likePostService(post.id, currentUserFetch)
                   }
+                  createCommentService={createCommentService}
+                  commentsFetch={commentsFetch}
                 />
               );
             })}

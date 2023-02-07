@@ -103,6 +103,7 @@ $white: #ffffff;
 }
 
 .postContainer {
+  word-wrap: break-word;
   background: $blue;
   border-radius: 10px;
   margin-bottom: 8px;
@@ -170,7 +171,7 @@ $white: #ffffff;
   margin: 20px 0;
   display: block;
   width: 100%;
-  border-top: 5px solid white;
+  border: 1px solid white;
 }
 
 .searchResultName {
@@ -198,6 +199,37 @@ $white: #ffffff;
 .editPostText {
   width: 500px !important;
   padding: 5px;
+}
+
+.commentControl {
+  font-size: 15px;
+  padding: 15px 100px 18px 40px;
+  background: white;
+  width: 100%;
+  border-radius: 50px;
+  border: 0;
+}
+.commentControl:focus {
+  outline: none;
+}
+
+.commentContainer {
+  background: white;
+  margin-left: 15px;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.showMoreComment {
+  cursor: pointer;
+  margin-left: 62px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 @media (min-width: 992px) {

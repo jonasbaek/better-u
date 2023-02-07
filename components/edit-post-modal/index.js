@@ -47,6 +47,8 @@ export default function EditPostModal(props) {
           >
             <FormControl className="mt-4">
               <TextareaAutosize
+                maxLength="2000"
+                maxRows={10}
                 className={styles.editPostText}
                 {...register("text")}
                 onChange={(e) => {

@@ -22,7 +22,6 @@ export default function AvatarComponent(props) {
           />
         )}
       </Avatar>
-      {props.text}
     </Link>
   );
 }
