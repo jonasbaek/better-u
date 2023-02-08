@@ -1,12 +1,10 @@
 import Head from "next/head";
-import Image from "next/image";
 import NavBar from "../components/nav-bar";
 import FriendList from "../components/friend-list";
 import PostProfile from "../components/post-profile";
 import PostStatus from "../components/post-status";
 import Post from "../components/post";
 import { getCookie, deleteCookie } from "cookies-next";
-import styles from "../styles/styles.module.scss";
 import useWindowSize from "../customHooks/useWindowSize";
 import { useEffect, useState, useContext } from "react";
 import { FetchContext } from "../providers/FetchContextProvider";
@@ -47,6 +45,7 @@ export default function BetterUPage(props) {
     currentUser,
     createCommentService,
     commentsFetch,
+    removeCommentService,
   } = useContext(FetchContext);
 
   useEffect(() => {
@@ -118,10 +117,10 @@ export default function BetterUPage(props) {
                     </p>
                   }
                 >
-                  {showMorePosts.posts?.map((post, i) => {
+                  {showMorePosts.posts?.map((post) => {
                     return (
                       <Post
-                        key={i}
+                        key={post.id}
                         post={post}
                         currentUser={currentUser}
                         currentUserFetch={currentUserFetch}
@@ -133,6 +132,7 @@ export default function BetterUPage(props) {
                         createCommentService={createCommentService}
                         commentsFetch={commentsFetch}
                         postsFetch={postsFetch}
+                        removeCommentService={removeCommentService}
                       />
                     );
                   })}

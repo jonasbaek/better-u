@@ -218,7 +218,25 @@ const FetchContextProvider = ({ children }) => {
         posts: [...data.posts],
         dirty: true,
       });
-      toast.success("Comment successfully created");
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
+  const removeCommentService = async (postId, commentId) => {
+    try {
+      await axios.delete(
+        `${apiUrl}/posts/${postId}/comments/${commentId}`,
+        fetchOptions
+      );
+      const { data } = await postsFetch.mutate();
+      setShowMorePosts({
+        nextUrl: data.nextUrl,
+        hasMore: !(data.posts.length === data.total),
+        posts: [...data.posts],
+        dirty: true,
+      });
+      toast.success("Comment deleted successfully");
     } catch (error) {
       toast.error(`${error}`);
     }
@@ -244,6 +262,7 @@ const FetchContextProvider = ({ children }) => {
         currentUser,
         users,
         commentsFetch,
+        removeCommentService,
       }}
     >
       {children}

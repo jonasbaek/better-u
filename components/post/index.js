@@ -76,6 +76,7 @@ export default function Post(props) {
   const postCreatedDate = new Date(props.post.createdAt);
   const f = new Intl.DateTimeFormat("en-us", {
     dateStyle: "full",
+    timeStyle: "short",
   });
 
   const handleSendClick = () => {
@@ -95,7 +96,7 @@ export default function Post(props) {
 
   const onSubmit = async (formData) => {
     await props.createCommentService(props.post.id, formData);
-    fetchComments();
+    await fetchComments();
     setValue("text", "");
   };
 
@@ -214,8 +215,14 @@ export default function Post(props) {
         <div>
           <span className={styles.divisor} />
           {comments?.comments?.map((comment) => (
-            <div key={comment.id} className="mb-4">
-              <Comment comment={comment} />
+            <div key={comment.id} className="mb-3">
+              <Comment
+                comment={comment}
+                currentUser={props.currentUser}
+                fetchComments={fetchComments}
+                post={props.post}
+                removeCommentService={props.removeCommentService}
+              />
             </div>
           ))}
 

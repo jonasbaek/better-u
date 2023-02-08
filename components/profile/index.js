@@ -19,6 +19,15 @@ export default function Profile(props) {
   });
   const { vertical, horizontal, open } = snackBarState;
 
+  const SumLikesFromPosts = () => {
+    const userPosts = props.user?.posts;
+    const totalLikes = userPosts?.reduce(
+      (sum, post) => sum + post.likes.length,
+      0
+    );
+    return totalLikes;
+  };
+
   const isCurrentUserProfile = () => {
     return props.currentUser?._id === props?.user?._id;
   };
@@ -38,6 +47,7 @@ export default function Profile(props) {
       null,
       props.refreshData
     );
+    await props.currentUserFetch.mutate();
   };
 
   const handleClose = async () => {
@@ -47,6 +57,7 @@ export default function Profile(props) {
       null,
       props.refreshData
     );
+    await props.currentUserFetch.mutate();
   };
 
   const action = (
@@ -88,19 +99,34 @@ export default function Profile(props) {
           </Avatar>
           <div className="ms-4 fw-bold lh-1">
             <h1 className="mt-2">{props.user.name}</h1>
-            <p className="ms-1 text-secondary">
-              {props.user?.friends.length} Friends
+            <p className="text-secondary mb-4 mt-3 ms-1">
+              {props.user?.description}
             </p>
-            {props.user?.friends?.map((friend, i) => {
-              return (
-                <AvatarComponent
-                  key={i}
-                  height={35}
-                  width={35}
-                  user={friend.user}
-                />
-              );
-            })}
+            <div className="d-flex">
+              {props.user?.friends?.map((friend, i) =>
+                i < 5 ? (
+                  <div
+                    key={friend._id}
+                    className={`${
+                      i % 2 === 0
+                        ? "position-absolute ms-3"
+                        : "position-relative"
+                    }`}
+                  >
+                    <AvatarComponent
+                      height={35}
+                      width={35}
+                      user={friend.user}
+                    />
+                  </div>
+                ) : null
+              )}
+            </div>
+            <div className="d-flex justify-content-between my-3 ms-1 text-secondary">
+              <span>{props.user?.friends?.length} friends</span>
+              <span>{SumLikesFromPosts()} likes</span>
+              <span>{props.user?.posts?.length} posts</span>
+            </div>
           </div>
         </div>
         {!isCurrentUserProfile() ? (
@@ -121,6 +147,7 @@ export default function Profile(props) {
           />
         )}
       </div>
+
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
