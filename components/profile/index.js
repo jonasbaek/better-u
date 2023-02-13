@@ -81,7 +81,7 @@ export default function Profile(props) {
   return (
     <section className={styles.profileContainer}>
       <div className="d-flex justify-content-between">
-        <div className="d-flex">
+        <div className="d-flex flex-wrap">
           <Avatar
             sx={{
               width: 150,
@@ -102,7 +102,12 @@ export default function Profile(props) {
             <p className="text-secondary mb-4 mt-3 ms-1">
               {props.user?.description}
             </p>
-            <div className="d-flex">
+            <div className={styles.profileSubContainer}>
+              <span>{props.user?.friends?.length} friends</span>
+              <span>{SumLikesFromPosts()} likes</span>
+              <span>{props.user?.posts?.length} posts</span>
+            </div>
+            <div className="d-flex pb-5">
               {props.user?.friends?.map((friend, i) =>
                 i < 5 ? (
                   <div
@@ -121,11 +126,6 @@ export default function Profile(props) {
                   </div>
                 ) : null
               )}
-            </div>
-            <div className="d-flex justify-content-between my-3 ms-1 text-secondary">
-              <span>{props.user?.friends?.length} friends</span>
-              <span>{SumLikesFromPosts()} likes</span>
-              <span>{props.user?.posts?.length} posts</span>
             </div>
           </div>
         </div>

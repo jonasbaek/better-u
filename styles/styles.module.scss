@@ -188,11 +188,20 @@ $white: #ffffff;
   max-width: 1000px;
   margin: auto;
   padding: 0 8px;
+
   .profileContainer {
     background: $blue;
     margin: 8px auto;
     border-radius: 10px;
-    padding: 20px 30px;
+    padding: 30px;
+
+    .profileSubContainer {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 8px;
+      color: #9fa6b2;
+      width: 250px;
+    }
   }
 }
 
